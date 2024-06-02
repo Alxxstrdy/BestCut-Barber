@@ -30,7 +30,7 @@ public class Loginsite extends javax.swing.JFrame {
     private void initComponents() {
 
         Belakang = new Palette.Panel();
-        jLabel1 = new javax.swing.JLabel();
+        close = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -60,12 +60,18 @@ public class Loginsite extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        jLabel1.setText("X");
-        jLabel1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+        close.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        close.setText("X");
+        close.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        close.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                closeMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                closeMouseExited(evt);
+            }
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                jLabel1MousePressed(evt);
+                closeMousePressed(evt);
             }
         });
 
@@ -132,7 +138,7 @@ public class Loginsite extends javax.swing.JFrame {
             BelakangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(BelakangLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
+                .addComponent(close)
                 .addGap(10, 10, 10))
             .addGroup(BelakangLayout.createSequentialGroup()
                 .addGap(81, 81, 81)
@@ -162,7 +168,7 @@ public class Loginsite extends javax.swing.JFrame {
                 .addGroup(BelakangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(BelakangLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(close, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(63, 63, 63)
                         .addComponent(jLabel2))
                     .addGroup(BelakangLayout.createSequentialGroup()
@@ -209,9 +215,9 @@ public class Loginsite extends javax.swing.JFrame {
         this.setLocation(x - xx, y - xy);
     }//GEN-LAST:event_BelakangMouseDragged
 
-    private void jLabel1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MousePressed
+    private void closeMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_closeMousePressed
         dispose();
-    }//GEN-LAST:event_jLabel1MousePressed
+    }//GEN-LAST:event_closeMousePressed
 
     private void bLoginMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bLoginMouseEntered
         bLogin.setBackground(new Color(134, 26, 27));
@@ -228,6 +234,14 @@ public class Loginsite extends javax.swing.JFrame {
     private void bLoginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bLoginMouseClicked
         bLogin.setBackground(new Color(222, 91, 91));
     }//GEN-LAST:event_bLoginMouseClicked
+
+    private void closeMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_closeMouseEntered
+        close.setForeground(new Color(102,102,102));
+    }//GEN-LAST:event_closeMouseEntered
+
+    private void closeMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_closeMouseExited
+        close.setForeground(new Color(0,0,0));
+    }//GEN-LAST:event_closeMouseExited
 
     /**
      * @param args the command line arguments
@@ -267,7 +281,7 @@ public class Loginsite extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private Palette.Panel Belakang;
     private Palette.Panel bLogin;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel close;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
