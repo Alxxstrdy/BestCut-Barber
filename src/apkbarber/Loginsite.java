@@ -34,12 +34,12 @@ public class Loginsite extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jPasswordField1 = new javax.swing.JPasswordField();
+        tpassword = new javax.swing.JPasswordField();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         bLogin = new Palette.Panel();
         jLabel7 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        tusername = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -83,9 +83,22 @@ public class Loginsite extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Rage Italic", 0, 18)); // NOI18N
         jLabel4.setText("Welcome Back");
 
-        jPasswordField1.setBackground(new java.awt.Color(223, 230, 233));
-        jPasswordField1.setText("jPasswordField1");
-        jPasswordField1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        tpassword.setBackground(new java.awt.Color(223, 230, 233));
+        tpassword.setText("Password");
+        tpassword.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        tpassword.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                tpasswordFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tpasswordFocusLost(evt);
+            }
+        });
+        tpassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tpasswordActionPerformed(evt);
+            }
+        });
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel5.setText("USERNAME");
@@ -128,9 +141,17 @@ public class Loginsite extends javax.swing.JFrame {
             .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
         );
 
-        jTextField2.setBackground(new java.awt.Color(223, 230, 233));
-        jTextField2.setText("Username");
-        jTextField2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        tusername.setBackground(new java.awt.Color(223, 230, 233));
+        tusername.setText("Username");
+        tusername.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        tusername.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                tusernameFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tusernameFocusLost(evt);
+            }
+        });
 
         javax.swing.GroupLayout BelakangLayout = new javax.swing.GroupLayout(Belakang);
         Belakang.setLayout(BelakangLayout);
@@ -150,10 +171,10 @@ public class Loginsite extends javax.swing.JFrame {
                             .addGroup(BelakangLayout.createSequentialGroup()
                                 .addGap(6, 6, 6)
                                 .addComponent(jLabel4))))
-                    .addComponent(jPasswordField1, javax.swing.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
+                    .addComponent(tpassword, javax.swing.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
                     .addComponent(jLabel5)
                     .addComponent(jLabel6)
-                    .addComponent(jTextField2))
+                    .addComponent(tusername))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 158, Short.MAX_VALUE)
                 .addComponent(jLabel2)
                 .addGap(83, 83, 83))
@@ -179,11 +200,11 @@ public class Loginsite extends javax.swing.JFrame {
                         .addGap(31, 31, 31)
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tusername, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(32, 32, 32)
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(tpassword, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(24, 24, 24)
                 .addComponent(bLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(59, Short.MAX_VALUE))
@@ -233,6 +254,7 @@ public class Loginsite extends javax.swing.JFrame {
 
     private void bLoginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bLoginMouseClicked
         bLogin.setBackground(new Color(222, 91, 91));
+        new Dashboard().setVisible(true);
     }//GEN-LAST:event_bLoginMouseClicked
 
     private void closeMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_closeMouseEntered
@@ -242,6 +264,34 @@ public class Loginsite extends javax.swing.JFrame {
     private void closeMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_closeMouseExited
         close.setForeground(new Color(0,0,0));
     }//GEN-LAST:event_closeMouseExited
+
+    private void tusernameFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tusernameFocusGained
+        if (tusername.getText().equals("Username")){
+            tusername.setText("");
+        }
+    }//GEN-LAST:event_tusernameFocusGained
+
+    private void tusernameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tusernameFocusLost
+        if (tusername.getText().equals("")){
+            tusername.setText("Username");
+        }
+    }//GEN-LAST:event_tusernameFocusLost
+
+    private void tpasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tpasswordActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tpasswordActionPerformed
+
+    private void tpasswordFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tpasswordFocusGained
+        if (tpassword.getText().equals("Password")){
+            tpassword.setText("");
+        }
+    }//GEN-LAST:event_tpasswordFocusGained
+
+    private void tpasswordFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tpasswordFocusLost
+        if (tpassword.getText().equals("")){
+            tpassword.setText("Password");
+        }
+    }//GEN-LAST:event_tpasswordFocusLost
 
     /**
      * @param args the command line arguments
@@ -288,7 +338,7 @@ public class Loginsite extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JPasswordField tpassword;
+    private javax.swing.JTextField tusername;
     // End of variables declaration//GEN-END:variables
 }
