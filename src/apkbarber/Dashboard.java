@@ -57,6 +57,7 @@ public class Dashboard extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(223, 230, 233));
+        setUndecorated(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         pnBelakang.setBackground(new java.awt.Color(255, 255, 255));
@@ -128,6 +129,9 @@ public class Dashboard extends javax.swing.JFrame {
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 bReservasiMouseExited(evt);
             }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                bReservasiMousePressed(evt);
+            }
         });
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -158,6 +162,9 @@ public class Dashboard extends javax.swing.JFrame {
         bKasir.setRoundTopLeft(20);
         bKasir.setRoundTopRight(20);
         bKasir.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bKasirMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 bKasirMouseEntered(evt);
             }
@@ -199,6 +206,9 @@ public class Dashboard extends javax.swing.JFrame {
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 bTransaksiMouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                bTransaksiMousePressed(evt);
             }
         });
 
@@ -473,6 +483,28 @@ public class Dashboard extends javax.swing.JFrame {
         new Loginsite().setVisible(true);
         dispose();
     }//GEN-LAST:event_bLogOutMouseClicked
+
+    private void bKasirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bKasirMouseClicked
+        bKasir.setBackground(new Color(223,230,233));
+        
+        pnUtama.removeAll();
+        pnUtama.add(new Kasir());
+        pnUtama.repaint();
+        pnUtama.revalidate();
+    }//GEN-LAST:event_bKasirMouseClicked
+
+    private void bTransaksiMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bTransaksiMousePressed
+
+    }//GEN-LAST:event_bTransaksiMousePressed
+
+    private void bReservasiMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bReservasiMousePressed
+        bKasir.setBackground(new Color(223,230,233));
+        
+        pnUtama.removeAll();
+        pnUtama.add(new Reservasi());
+        pnUtama.repaint();
+        pnUtama.revalidate();
+    }//GEN-LAST:event_bReservasiMousePressed
 
     /**
      * @param args the command line arguments
