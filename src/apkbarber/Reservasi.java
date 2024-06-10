@@ -4,6 +4,12 @@
  */
 package apkbarber;
 
+import com.raven.event.EventTimePicker;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -17,6 +23,39 @@ public class Reservasi extends javax.swing.JPanel {
      */
     public Reservasi() {
         initComponents();
+        Jam.set24hourMode(true);
+        Jam.now();
+        
+
+        Jam.addEventTimePicker(new EventTimePicker() {
+            @Override
+            public void timeSelected(String string) {
+                // System.out.println(string);
+            }
+        });
+
+        Jam.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                System.out.println("Time Selected " + Jam.getSelectedTime());
+            }
+        });
+        tNama.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!Character.isLetter(c) && c != ' ') {
+                    e.consume();
+                }
+            }
+        });
+        tNoTelp.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!Character.isDigit(c)) {
+                    e.consume();
+                }
+            }
+        });
     }
 
     /**
@@ -29,11 +68,11 @@ public class Reservasi extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel8 = new javax.swing.JLabel();
+        Jam = new com.raven.swing.TimePicker();
         pnMain = new javax.swing.JPanel();
         pnView = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         vtabel = new Palette.JTable_Custom();
-        jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         panel1 = new Palette.Panel();
@@ -51,18 +90,22 @@ public class Reservasi extends javax.swing.JPanel {
         jLabel11 = new javax.swing.JLabel();
         WAKTU = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        vWaktu = new javax.swing.JTextField();
         tNoTelp = new javax.swing.JTextField();
         tNama = new javax.swing.JTextField();
-        jTextField6 = new javax.swing.JTextField();
         bCAncel = new Palette.Panel();
         jLabel6 = new javax.swing.JLabel();
-        panel3 = new Palette.Panel();
+        bSelesai = new Palette.Panel();
         jLabel7 = new javax.swing.JLabel();
+        bJam = new javax.swing.JButton();
+        tLayanan = new javax.swing.JComboBox<>();
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel8.setText("SELESAI");
+
+        Jam.setForeground(new java.awt.Color(90, 184, 120));
+        Jam.setDisplayText(vWaktu);
 
         setLayout(new java.awt.CardLayout());
 
@@ -88,9 +131,6 @@ public class Reservasi extends javax.swing.JPanel {
         vtabel.setRowHeight(20);
         vtabel.setShowVerticalLines(true);
         jScrollPane2.setViewportView(vtabel);
-
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel1.setText("RESERVASI");
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel2.setText("DATA LIST RESERVASI");
@@ -175,17 +215,12 @@ public class Reservasi extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(pnViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnViewLayout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 692, Short.MAX_VALUE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 684, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnViewLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(pnViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnViewLayout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addContainerGap())
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnViewLayout.createSequentialGroup()
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(24, 24, 24))))))
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(24, 24, 24))))
             .addGroup(pnViewLayout.createSequentialGroup()
                 .addGap(27, 27, 27)
                 .addComponent(jLabel2)
@@ -202,23 +237,17 @@ public class Reservasi extends javax.swing.JPanel {
         pnViewLayout.setVerticalGroup(
             pnViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnViewLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(34, 34, 34)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel2)
                 .addGap(34, 34, 34)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 114, Short.MAX_VALUE)
                 .addGroup(pnViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnViewLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnViewLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(pnViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(bCancel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(panel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(panel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(bCancel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(36, 36, 36))
         );
 
@@ -262,10 +291,9 @@ public class Reservasi extends javax.swing.JPanel {
         jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel13.setText("LAYANAN");
 
-        jTextField3.setText("Search");
-        jTextField3.addActionListener(new java.awt.event.ActionListener() {
+        vWaktu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField3ActionPerformed(evt);
+                vWaktuActionPerformed(evt);
             }
         });
 
@@ -299,13 +327,6 @@ public class Reservasi extends javax.swing.JPanel {
             }
         });
 
-        jTextField6.setText("Search");
-        jTextField6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField6ActionPerformed(evt);
-            }
-        });
-
         bCAncel.setBackground(new java.awt.Color(255, 0, 0));
         bCAncel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -330,57 +351,72 @@ public class Reservasi extends javax.swing.JPanel {
             .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
         );
 
-        panel3.setBackground(new java.awt.Color(0, 153, 153));
+        bSelesai.setBackground(new java.awt.Color(0, 153, 153));
+        bSelesai.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                bSelesaiMousePressed(evt);
+            }
+        });
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel7.setText("SELESAI");
 
-        javax.swing.GroupLayout panel3Layout = new javax.swing.GroupLayout(panel3);
-        panel3.setLayout(panel3Layout);
-        panel3Layout.setHorizontalGroup(
-            panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout bSelesaiLayout = new javax.swing.GroupLayout(bSelesai);
+        bSelesai.setLayout(bSelesaiLayout);
+        bSelesaiLayout.setHorizontalGroup(
+            bSelesaiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
         );
-        panel3Layout.setVerticalGroup(
-            panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        bSelesaiLayout.setVerticalGroup(
+            bSelesaiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
         );
+
+        bJam.setText("SHOW TIME");
+        bJam.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bJamActionPerformed(evt);
+            }
+        });
+
+        tLayanan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cukur", "Cukur & Keramas", "Kumis", "Hair Coloring" }));
 
         javax.swing.GroupLayout pnAddLayout = new javax.swing.GroupLayout(pnAdd);
         pnAdd.setLayout(pnAddLayout);
         pnAddLayout.setHorizontalGroup(
             pnAddLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnAddLayout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addGroup(pnAddLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnAddLayout.createSequentialGroup()
-                        .addGroup(pnAddLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel9)
-                            .addComponent(jLabel10)
-                            .addComponent(jLabel11)
-                            .addComponent(WAKTU)
-                            .addComponent(jLabel13)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tNama, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
-                            .addComponent(tID)
-                            .addComponent(tNoTelp))
-                        .addGap(114, 299, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnAddLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(panel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(33, 33, 33)
-                        .addComponent(bCAncel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(15, 15, 15))
-                    .addGroup(pnAddLayout.createSequentialGroup()
-                        .addGroup(pnAddLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnAddLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel3)
                 .addContainerGap())
+            .addGroup(pnAddLayout.createSequentialGroup()
+                .addGap(17, 17, 17)
+                .addGroup(pnAddLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnAddLayout.createSequentialGroup()
+                        .addComponent(tLayanan, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(pnAddLayout.createSequentialGroup()
+                        .addGroup(pnAddLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addGroup(pnAddLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jLabel9)
+                                .addComponent(jLabel10)
+                                .addComponent(jLabel11)
+                                .addComponent(WAKTU)
+                                .addComponent(jLabel13)
+                                .addGroup(pnAddLayout.createSequentialGroup()
+                                    .addComponent(vWaktu, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(bJam))
+                                .addComponent(tNama, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+                                .addComponent(tID)
+                                .addComponent(tNoTelp)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+                        .addComponent(bSelesai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(33, 33, 33)
+                        .addComponent(bCAncel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(32, 32, 32))))
         );
         pnAddLayout.setVerticalGroup(
             pnAddLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -404,15 +440,17 @@ public class Reservasi extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addComponent(WAKTU)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(pnAddLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(vWaktu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(bJam))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel13)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
+                .addComponent(tLayanan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
                 .addGroup(pnAddLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(bCAncel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(panel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(bSelesai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(32, 32, 32))
         );
 
@@ -420,10 +458,6 @@ public class Reservasi extends javax.swing.JPanel {
 
         add(pnMain, "card2");
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField6ActionPerformed
 
     private void tNamaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tNamaActionPerformed
         // TODO add your handling code here:
@@ -433,78 +467,104 @@ public class Reservasi extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_tNoTelpActionPerformed
 
-    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
+    private void vWaktuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_vWaktuActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField3ActionPerformed
+    }//GEN-LAST:event_vWaktuActionPerformed
 
     private void tIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tIDActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_tIDActionPerformed
 
     private void tIDFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tIDFocusGained
-        if (tID.getText().equals("ID Pelanggan")){
-             tID.setText("");
+        if (tID.getText().equals("ID Pelanggan")) {
+            tID.setText("");
         }
     }//GEN-LAST:event_tIDFocusGained
 
     private void tIDFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tIDFocusLost
-         if (tID.getText().equals("")){
+        if (tID.getText().equals("")) {
             tID.setText("ID Pelanggan");
         }
     }//GEN-LAST:event_tIDFocusLost
 
     private void tNamaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tNamaFocusGained
-        if (tNama.getText().equals("Nama Pelanggan")){
-             tNama.setText("");
+        if (tNama.getText().equals("Nama Pelanggan")) {
+            tNama.setText("");
         }
     }//GEN-LAST:event_tNamaFocusGained
 
     private void tNamaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tNamaFocusLost
-        if (tNama.getText().equals("")){
+        if (tNama.getText().equals("")) {
             tNama.setText("Nama Pelanggan");
         }
     }//GEN-LAST:event_tNamaFocusLost
 
     private void tNoTelpFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tNoTelpFocusGained
-        if (tNoTelp.getText().equals("No Telp")){
-             tNoTelp.setText("");
+        if (tNoTelp.getText().equals("No Telp")) {
+            tNoTelp.setText("");
         }
     }//GEN-LAST:event_tNoTelpFocusGained
 
     private void tNoTelpFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tNoTelpFocusLost
-        if (tNoTelp.getText().equals("")){
+        if (tNoTelp.getText().equals("")) {
             tNoTelp.setText("No Telp");
         }
     }//GEN-LAST:event_tNoTelpFocusLost
 
     private void bCAncelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bCAncelMouseClicked
-  pnMain.removeAll();
+        pnMain.removeAll();
         pnMain.add(pnView);
         pnMain.repaint();;
         pnMain.revalidate();        // TODO add your handling code here:
     }//GEN-LAST:event_bCAncelMouseClicked
 
     private void bCancelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bCancelMouseClicked
-       pnMain.removeAll();
-    pnMain.add(new Menu()); // Assuming HomePanel is the class for the home screen
-    pnMain.repaint();
-    pnMain.revalidate();
-       
+        pnMain.removeAll();
+        pnMain.add(new Menu()); // Assuming HomePanel is the class for the home screen
+        pnMain.repaint();
+        pnMain.revalidate();
+
     }//GEN-LAST:event_bCancelMouseClicked
 
     private void panel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel1MouseClicked
-      pnMain.removeAll();
-      pnMain.add(pnAdd);
-      pnMain.repaint();;
-      pnMain.revalidate();
+        pnMain.removeAll();
+        pnMain.add(pnAdd);
+        pnMain.repaint();;
+        pnMain.revalidate();
     }//GEN-LAST:event_panel1MouseClicked
 
+    private void bJamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bJamActionPerformed
+        Jam.showPopup(this, 100, 100);
+    }//GEN-LAST:event_bJamActionPerformed
 
+    private void bSelesaiMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bSelesaiMousePressed
+vtabel.setModel(tbl);
+        tbl.addRow(new Object[]{
+        tID.getText(), tNama.getText(), tNoTelp.getText(), vWaktu.getText(), tLayanan.getSelectedItem(),});
+        vtabel.setModel(tbl);
+        tID.setText("ID Pelanggan");
+        tNama.setText("Nama Pelanggan");
+        tNoTelp.setText("No Telp");
+        vWaktu.setText(" ");
+
+        pnMain.removeAll();
+        pnMain.add(pnView);
+        pnMain.repaint();
+        pnMain.revalidate();
+
+    }//GEN-LAST:event_bSelesaiMousePressed
+
+    int baris = 0;
+    static Object kolom[] = {"ID Pelanggan", "Nama Pelanggan", "No Telp.", "Waktu", "Layanan"};
+    DefaultTableModel tbl = new DefaultTableModel(kolom, baris);
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private com.raven.swing.TimePicker Jam;
     private javax.swing.JLabel WAKTU;
     private Palette.Panel bCAncel;
     private Palette.Panel bCancel;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton bJam;
+    private Palette.Panel bSelesai;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
@@ -520,17 +580,16 @@ public class Reservasi extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField6;
     private Palette.Panel panel1;
     private Palette.Panel panel2;
-    private Palette.Panel panel3;
     private javax.swing.JPanel pnAdd;
     private javax.swing.JPanel pnMain;
     private javax.swing.JPanel pnView;
     private javax.swing.JTextField tID;
+    private javax.swing.JComboBox<String> tLayanan;
     private javax.swing.JTextField tNama;
     private javax.swing.JTextField tNoTelp;
+    private javax.swing.JTextField vWaktu;
     private Palette.JTable_Custom vtabel;
     // End of variables declaration//GEN-END:variables
 }

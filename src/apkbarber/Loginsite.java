@@ -249,12 +249,12 @@ public class Loginsite extends javax.swing.JFrame {
     }//GEN-LAST:event_bLoginMouseExited
 
     private void bLoginMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bLoginMousePressed
-
+        bLogin.setBackground(new Color(222, 91, 91));
+        new Dashboard().setVisible(true);
     }//GEN-LAST:event_bLoginMousePressed
 
     private void bLoginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bLoginMouseClicked
-        bLogin.setBackground(new Color(222, 91, 91));
-        new Dashboard().setVisible(true);
+
     }//GEN-LAST:event_bLoginMouseClicked
 
     private void closeMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_closeMouseEntered

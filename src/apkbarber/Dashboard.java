@@ -5,6 +5,12 @@
 package apkbarber;
 
 import java.awt.Color;
+import java.awt.List;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.Timer;
 
 /**
  *
@@ -17,9 +23,30 @@ public class Dashboard extends javax.swing.JFrame {
      */
     public Dashboard() {
         initComponents();
+        wkt();
         
     }
 
+        Timer t ;
+        SimpleDateFormat st; 
+        
+    public void wkt(){
+
+        t = new Timer(0, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            Date dt = new Date();
+            st = new SimpleDateFormat("HH:mm:ss" + " " + " " + "dd-MM-yyyy");
+            String tt = st.format(dt);
+            lJam.setText(tt);   
+            
+            }
+        });
+        
+        t.start();
+        
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -31,6 +58,7 @@ public class Dashboard extends javax.swing.JFrame {
 
         pnBelakang = new javax.swing.JPanel();
         pnAtas = new javax.swing.JPanel();
+        lJam = new javax.swing.JLabel();
         sideBar = new javax.swing.JPanel();
         bHome = new Palette.Panel();
         jLabel1 = new javax.swing.JLabel();
@@ -53,6 +81,9 @@ public class Dashboard extends javax.swing.JFrame {
         bLogOut = new Palette.Panel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        bList = new Palette.Panel();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
         pnUtama = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -62,23 +93,33 @@ public class Dashboard extends javax.swing.JFrame {
 
         pnBelakang.setBackground(new java.awt.Color(255, 255, 255));
 
-        pnAtas.setBackground(new java.awt.Color(223, 230, 233));
         pnAtas.setPreferredSize(new java.awt.Dimension(898, 70));
+
+        lJam.setBackground(new java.awt.Color(0, 0, 0));
+        lJam.setFont(new java.awt.Font("Lucida Fax", 0, 12)); // NOI18N
+        lJam.setText("jLabel15");
 
         javax.swing.GroupLayout pnAtasLayout = new javax.swing.GroupLayout(pnAtas);
         pnAtas.setLayout(pnAtasLayout);
         pnAtasLayout.setHorizontalGroup(
             pnAtasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(pnAtasLayout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addComponent(lJam)
+                .addContainerGap(652, Short.MAX_VALUE))
         );
         pnAtasLayout.setVerticalGroup(
             pnAtasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 70, Short.MAX_VALUE)
+            .addGroup(pnAtasLayout.createSequentialGroup()
+                .addGap(27, 27, 27)
+                .addComponent(lJam)
+                .addContainerGap(28, Short.MAX_VALUE))
         );
 
-        sideBar.setBackground(new java.awt.Color(223, 230, 233));
+        sideBar.setBackground(new java.awt.Color(46, 134, 222));
 
-        bHome.setBackground(new java.awt.Color(223, 230, 233));
+        bHome.setBackground(new java.awt.Color(46, 134, 222));
+        bHome.setPreferredSize(new java.awt.Dimension(178, 30));
         bHome.setRoundBottomLeft(20);
         bHome.setRoundBottomRight(20);
         bHome.setRoundTopLeft(20);
@@ -95,7 +136,8 @@ public class Dashboard extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Lucida Fax", 0, 14)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("HOME");
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -114,10 +156,11 @@ public class Dashboard extends javax.swing.JFrame {
         bHomeLayout.setVerticalGroup(
             bHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
+            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
         );
 
-        bReservasi.setBackground(new java.awt.Color(223, 230, 233));
+        bReservasi.setBackground(new java.awt.Color(46, 134, 222));
+        bReservasi.setPreferredSize(new java.awt.Dimension(178, 30));
         bReservasi.setRoundBottomLeft(20);
         bReservasi.setRoundBottomRight(20);
         bReservasi.setRoundTopLeft(20);
@@ -134,7 +177,8 @@ public class Dashboard extends javax.swing.JFrame {
             }
         });
 
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Lucida Fax", 0, 14)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("RESERVASI");
 
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -153,10 +197,11 @@ public class Dashboard extends javax.swing.JFrame {
         bReservasiLayout.setVerticalGroup(
             bReservasiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
+            .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
         );
 
-        bKasir.setBackground(new java.awt.Color(223, 230, 233));
+        bKasir.setBackground(new java.awt.Color(46, 134, 222));
+        bKasir.setPreferredSize(new java.awt.Dimension(178, 30));
         bKasir.setRoundBottomLeft(20);
         bKasir.setRoundBottomRight(20);
         bKasir.setRoundTopLeft(20);
@@ -171,9 +216,13 @@ public class Dashboard extends javax.swing.JFrame {
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 bKasirMouseExited(evt);
             }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                bKasirMousePressed(evt);
+            }
         });
 
-        jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel9.setFont(new java.awt.Font("Lucida Fax", 0, 14)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
         jLabel9.setText("KASIR");
 
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -192,10 +241,11 @@ public class Dashboard extends javax.swing.JFrame {
         bKasirLayout.setVerticalGroup(
             bKasirLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
+            .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
         );
 
-        bTransaksi.setBackground(new java.awt.Color(223, 230, 233));
+        bTransaksi.setBackground(new java.awt.Color(46, 134, 222));
+        bTransaksi.setPreferredSize(new java.awt.Dimension(178, 30));
         bTransaksi.setRoundBottomLeft(20);
         bTransaksi.setRoundBottomRight(20);
         bTransaksi.setRoundTopLeft(20);
@@ -212,7 +262,8 @@ public class Dashboard extends javax.swing.JFrame {
             }
         });
 
-        jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel11.setFont(new java.awt.Font("Lucida Fax", 0, 14)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
         jLabel11.setText("TRANSAKSI");
 
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -231,10 +282,11 @@ public class Dashboard extends javax.swing.JFrame {
         bTransaksiLayout.setVerticalGroup(
             bTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
+            .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
         );
 
-        bStok.setBackground(new java.awt.Color(223, 230, 233));
+        bStok.setBackground(new java.awt.Color(46, 134, 222));
+        bStok.setPreferredSize(new java.awt.Dimension(178, 30));
         bStok.setRoundBottomLeft(20);
         bStok.setRoundBottomRight(20);
         bStok.setRoundTopLeft(20);
@@ -248,7 +300,8 @@ public class Dashboard extends javax.swing.JFrame {
             }
         });
 
-        jLabel13.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel13.setFont(new java.awt.Font("Lucida Fax", 0, 14)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
         jLabel13.setText("STOK");
 
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -267,10 +320,11 @@ public class Dashboard extends javax.swing.JFrame {
         bStokLayout.setVerticalGroup(
             bStokLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
+            .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
         );
 
-        bReport.setBackground(new java.awt.Color(223, 230, 233));
+        bReport.setBackground(new java.awt.Color(46, 134, 222));
+        bReport.setPreferredSize(new java.awt.Dimension(178, 30));
         bReport.setRoundBottomLeft(20);
         bReport.setRoundBottomRight(20);
         bReport.setRoundTopLeft(20);
@@ -284,7 +338,8 @@ public class Dashboard extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Lucida Fax", 0, 14)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("REPORT");
 
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -303,10 +358,10 @@ public class Dashboard extends javax.swing.JFrame {
         bReportLayout.setVerticalGroup(
             bReportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
+            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
         );
 
-        bLogOut.setBackground(new java.awt.Color(223, 230, 233));
+        bLogOut.setBackground(new java.awt.Color(46, 134, 222));
         bLogOut.setRoundBottomLeft(20);
         bLogOut.setRoundBottomRight(20);
         bLogOut.setRoundTopLeft(20);
@@ -323,7 +378,8 @@ public class Dashboard extends javax.swing.JFrame {
             }
         });
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Lucida Fax", 0, 14)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("LOG OUT");
 
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -345,6 +401,47 @@ public class Dashboard extends javax.swing.JFrame {
             .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
         );
 
+        bList.setBackground(new java.awt.Color(46, 134, 222));
+        bList.setPreferredSize(new java.awt.Dimension(178, 30));
+        bList.setRoundBottomLeft(20);
+        bList.setRoundBottomRight(20);
+        bList.setRoundTopLeft(20);
+        bList.setRoundTopRight(20);
+        bList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                bListMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                bListMouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                bListMousePressed(evt);
+            }
+        });
+
+        jLabel15.setFont(new java.awt.Font("Lucida Fax", 0, 14)); // NOI18N
+        jLabel15.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel15.setText("LIST ");
+
+        jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel16.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/to-do-list.png"))); // NOI18N
+
+        javax.swing.GroupLayout bListLayout = new javax.swing.GroupLayout(bList);
+        bList.setLayout(bListLayout);
+        bListLayout.setHorizontalGroup(
+            bListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bListLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        bListLayout.setVerticalGroup(
+            bListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jLabel16, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout sideBarLayout = new javax.swing.GroupLayout(sideBar);
         sideBar.setLayout(sideBarLayout);
         sideBarLayout.setHorizontalGroup(
@@ -358,27 +455,30 @@ public class Dashboard extends javax.swing.JFrame {
                     .addComponent(bKasir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(bTransaksi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(bStok, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(bLogOut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(bLogOut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(bList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         sideBarLayout.setVerticalGroup(
             sideBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(sideBarLayout.createSequentialGroup()
-                .addGap(23, 23, 23)
+                .addGap(87, 87, 87)
                 .addComponent(bHome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23)
+                .addGap(20, 20, 20)
                 .addComponent(bReservasi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23)
+                .addGap(20, 20, 20)
                 .addComponent(bKasir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23)
+                .addGap(20, 20, 20)
                 .addComponent(bTransaksi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23)
+                .addGap(20, 20, 20)
                 .addComponent(bStok, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23)
+                .addGap(20, 20, 20)
+                .addComponent(bList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20)
                 .addComponent(bReport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(75, 75, 75)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(bLogOut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pnUtama.setLayout(new java.awt.BorderLayout());
@@ -387,28 +487,28 @@ public class Dashboard extends javax.swing.JFrame {
         pnBelakang.setLayout(pnBelakangLayout);
         pnBelakangLayout.setHorizontalGroup(
             pnBelakangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnAtas, javax.swing.GroupLayout.DEFAULT_SIZE, 921, Short.MAX_VALUE)
             .addGroup(pnBelakangLayout.createSequentialGroup()
                 .addComponent(sideBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(pnUtama, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(15, 15, 15))
+                .addGroup(pnBelakangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnBelakangLayout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(pnUtama, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(12, 12, 12))
+                    .addGroup(pnBelakangLayout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(pnAtas, javax.swing.GroupLayout.PREFERRED_SIZE, 719, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
         pnBelakangLayout.setVerticalGroup(
             pnBelakangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnBelakangLayout.createSequentialGroup()
                 .addComponent(pnAtas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(pnBelakangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnBelakangLayout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addComponent(sideBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(pnBelakangLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(pnUtama, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(12, 12, 12))))
+                .addGap(12, 12, 12)
+                .addComponent(pnUtama, javax.swing.GroupLayout.DEFAULT_SIZE, 511, Short.MAX_VALUE)
+                .addGap(12, 12, 12))
+            .addComponent(sideBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        getContentPane().add(pnBelakang, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+        getContentPane().add(pnBelakang, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 910, -1));
 
         pack();
         setLocationRelativeTo(null);
@@ -485,12 +585,7 @@ public class Dashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_bLogOutMouseClicked
 
     private void bKasirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bKasirMouseClicked
-        bKasir.setBackground(new Color(223,230,233));
-        
-        pnUtama.removeAll();
-        pnUtama.add(new Kasir());
-        pnUtama.repaint();
-        pnUtama.revalidate();
+
     }//GEN-LAST:event_bKasirMouseClicked
 
     private void bTransaksiMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bTransaksiMousePressed
@@ -505,6 +600,32 @@ public class Dashboard extends javax.swing.JFrame {
         pnUtama.repaint();
         pnUtama.revalidate();
     }//GEN-LAST:event_bReservasiMousePressed
+
+    private void bKasirMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bKasirMousePressed
+        bKasir.setBackground(new Color(223,230,233));
+        
+        pnUtama.removeAll();
+        pnUtama.add(new Kasir());
+        pnUtama.repaint();
+        pnUtama.revalidate();
+    }//GEN-LAST:event_bKasirMousePressed
+
+    private void bListMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bListMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bListMouseEntered
+
+    private void bListMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bListMouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bListMouseExited
+
+    private void bListMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bListMousePressed
+        bList.setBackground(new Color(223,230,233));
+        
+        pnUtama.removeAll();
+        pnUtama.add(new PriceList() );
+        pnUtama.repaint();
+        pnUtama.revalidate();
+    }//GEN-LAST:event_bListMousePressed
 
     /**
      * @param args the command line arguments
@@ -544,6 +665,7 @@ public class Dashboard extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private Palette.Panel bHome;
     private Palette.Panel bKasir;
+    private Palette.Panel bList;
     private Palette.Panel bLogOut;
     private Palette.Panel bReport;
     private Palette.Panel bReservasi;
@@ -555,6 +677,8 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -563,9 +687,14 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel lJam;
     private javax.swing.JPanel pnAtas;
     private javax.swing.JPanel pnBelakang;
     private javax.swing.JPanel pnUtama;
     private javax.swing.JPanel sideBar;
     // End of variables declaration//GEN-END:variables
+
+    private Color Color(int i, int i0, int i1) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }
