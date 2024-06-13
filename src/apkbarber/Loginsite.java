@@ -4,7 +4,22 @@
  */
 package apkbarber;
 
+import com.formdev.flatlaf.FlatLightLaf;
+import com.mysql.cj.jdbc.PreparedStatementWrapper;
+import config.koneksi;
 import java.awt.Color;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.security.MessageDigest;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Connection;
+import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+
 
 /**
  *
@@ -12,14 +27,21 @@ import java.awt.Color;
  */
 public class Loginsite extends javax.swing.JFrame {
     int xx, xy;
+    private Connection conn;
     /**
      * Creates new form Loginsite
      */
     public Loginsite() {
         initComponents();
+        conn = koneksi.getConnection();
         this.setBackground(new Color(0, 0, 0, 0));
+        ilang();
+        setShowPassword();
     }
-
+    
+    void ilang (){
+        wPassword.setText(null);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -40,8 +62,12 @@ public class Loginsite extends javax.swing.JFrame {
         bLogin = new Palette.Panel();
         jLabel7 = new javax.swing.JLabel();
         tusername = new javax.swing.JTextField();
+        wPassword = new javax.swing.JLabel();
+        eyeHide = new javax.swing.JLabel();
+        eye = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setIconImage(new javax.swing.ImageIcon(getClass().getResource("/icon/Barbericn.png")).getImage());
         setUndecorated(true);
 
         Belakang.setBackground(new java.awt.Color(223, 230, 233));
@@ -75,7 +101,7 @@ public class Loginsite extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/Logo Barber.png"))); // NOI18N
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/LogoBarber.png"))); // NOI18N
 
         jLabel3.setFont(new java.awt.Font("Humnst777 Blk BT", 0, 36)); // NOI18N
         jLabel3.setText("LOGIN");
@@ -100,10 +126,10 @@ public class Loginsite extends javax.swing.JFrame {
             }
         });
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Humanst521 Lt BT", 1, 12)); // NOI18N
         jLabel5.setText("USERNAME");
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Humanst521 BT", 1, 12)); // NOI18N
         jLabel6.setText("PASSWORD");
 
         bLogin.setBackground(new java.awt.Color(214, 48, 49));
@@ -134,7 +160,7 @@ public class Loginsite extends javax.swing.JFrame {
         bLogin.setLayout(bLoginLayout);
         bLoginLayout.setHorizontalGroup(
             bLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
+            .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
         );
         bLoginLayout.setVerticalGroup(
             bLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -153,6 +179,15 @@ public class Loginsite extends javax.swing.JFrame {
             }
         });
 
+        wPassword.setFont(new java.awt.Font("Humanst521 BT", 1, 12)); // NOI18N
+        wPassword.setForeground(new java.awt.Color(255, 0, 0));
+        wPassword.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        wPassword.setText("jLabel8");
+
+        eyeHide.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/eye hide.png"))); // NOI18N
+
+        eye.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/eye.png"))); // NOI18N
+
         javax.swing.GroupLayout BelakangLayout = new javax.swing.GroupLayout(Belakang);
         Belakang.setLayout(BelakangLayout);
         BelakangLayout.setHorizontalGroup(
@@ -162,26 +197,36 @@ public class Loginsite extends javax.swing.JFrame {
                 .addComponent(close)
                 .addGap(10, 10, 10))
             .addGroup(BelakangLayout.createSequentialGroup()
-                .addGap(81, 81, 81)
-                .addGroup(BelakangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(BelakangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(BelakangLayout.createSequentialGroup()
-                        .addGap(59, 59, 59)
-                        .addGroup(BelakangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
+                        .addGap(81, 81, 81)
+                        .addGroup(BelakangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(BelakangLayout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(jLabel4))))
-                    .addComponent(tpassword, javax.swing.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel6)
-                    .addComponent(tusername))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 158, Short.MAX_VALUE)
-                .addComponent(jLabel2)
+                                .addGap(59, 59, 59)
+                                .addGroup(BelakangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3)
+                                    .addGroup(BelakangLayout.createSequentialGroup()
+                                        .addGap(6, 6, 6)
+                                        .addComponent(jLabel4))))
+                            .addComponent(tpassword, javax.swing.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6)
+                            .addComponent(tusername))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(eyeHide, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(BelakangLayout.createSequentialGroup()
+                        .addGap(120, 120, 120)
+                        .addGroup(BelakangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(wPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(bLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 113, Short.MAX_VALUE)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(83, 83, 83))
-            .addGroup(BelakangLayout.createSequentialGroup()
-                .addGap(133, 133, 133)
-                .addComponent(bLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(BelakangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BelakangLayout.createSequentialGroup()
+                    .addContainerGap(352, Short.MAX_VALUE)
+                    .addComponent(eye)
+                    .addGap(288, 288, 288)))
         );
         BelakangLayout.setVerticalGroup(
             BelakangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -204,10 +249,19 @@ public class Loginsite extends javax.swing.JFrame {
                         .addGap(32, 32, 32)
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(tpassword, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(24, 24, 24)
-                .addComponent(bLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(BelakangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(eyeHide, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(tpassword, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addComponent(bLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(wPassword)))
                 .addContainerGap(59, Short.MAX_VALUE))
+            .addGroup(BelakangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BelakangLayout.createSequentialGroup()
+                    .addContainerGap(280, Short.MAX_VALUE)
+                    .addComponent(eye, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(147, 147, 147)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -250,7 +304,7 @@ public class Loginsite extends javax.swing.JFrame {
 
     private void bLoginMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bLoginMousePressed
         bLogin.setBackground(new Color(222, 91, 91));
-        new Dashboard().setVisible(true);
+        prosesLogin();
     }//GEN-LAST:event_bLoginMousePressed
 
     private void bLoginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bLoginMouseClicked
@@ -303,20 +357,9 @@ public class Loginsite extends javax.swing.JFrame {
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Loginsite.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Loginsite.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Loginsite.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Loginsite.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+         UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         //</editor-fold>
 
@@ -332,6 +375,8 @@ public class Loginsite extends javax.swing.JFrame {
     private Palette.Panel Belakang;
     private Palette.Panel bLogin;
     private javax.swing.JLabel close;
+    private javax.swing.JLabel eye;
+    private javax.swing.JLabel eyeHide;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -340,5 +385,95 @@ public class Loginsite extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPasswordField tpassword;
     private javax.swing.JTextField tusername;
+    private javax.swing.JLabel wPassword;
     // End of variables declaration//GEN-END:variables
+private String getMd5java(String message){
+    String digest = null;
+    try {
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        byte[] hash = md.digest(message.getBytes("UTF-8"));
+        
+        StringBuilder sb = new StringBuilder(2*hash.length);
+        for(byte b : hash) {
+            sb.append(String.format("%02x", b & 0xff));
+        }
+        digest = sb.toString();
+        
+    } catch (Exception e) {
+        Logger.getLogger(Loginsite.class.getName()).log(Level.SEVERE, null, e );
+                
+    }
+    return digest;
+}   
+private boolean validasiInput(){
+    boolean valid = false;
+    if (tusername.getText().trim().isEmpty()){
+        wPassword.setText("Username tidak boleh kosong");
+    }else if (tpassword.getText().trim().isEmpty()){
+        wPassword.setText("Password tidak boleh kosong");
+    }else{
+        valid=true;
+    }
+    return valid;
 }
+private boolean checklogin(String username, String password){
+    if(conn != null){
+        try {
+            String sql= "SELECT *FROM user WHERE Username=? AND Password=?";
+            PreparedStatement st = conn.prepareStatement(sql);
+            st.setString(1, username);
+            st.setString(2, password);
+            
+            ResultSet rs = st.executeQuery();
+            if(rs.next()){
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    return false;
+}
+private void prosesLogin(){
+    if (validasiInput()){
+        String username = tusername.getText();
+        String password = new String(tpassword.getPassword());
+        String hashedPassword = getMd5java(password);
+        
+        if(checklogin(username, hashedPassword)){
+            MenuUtama mn = new MenuUtama();
+            mn.setVisible(true);
+            mn.revalidate();
+            
+            dispose();
+        }else {
+            wPassword.setText("Username/Password salah");
+            tusername.setText("Username");
+            tpassword.setText("Password");
+        }
+    }
+}
+
+    private void setShowPassword() {
+        eyeHide.setVisible(false);
+        eye.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                eye.setVisible(false);
+                eyeHide.setVisible(true);
+                tpassword.setEchoChar((char)0);
+            }
+        
+        });
+                eyeHide.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                eye.setVisible(true);
+                eyeHide.setVisible(false);
+                tpassword.setEchoChar('*');
+            }
+        
+        });
+        
+    }
+}   

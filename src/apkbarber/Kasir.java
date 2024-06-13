@@ -45,6 +45,7 @@ public class Kasir extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         pnTambah = new javax.swing.JPanel();
 
+        setPreferredSize(new java.awt.Dimension(730, 564));
         setLayout(new java.awt.CardLayout());
 
         pnMain.setBackground(new java.awt.Color(255, 255, 255));
@@ -62,14 +63,14 @@ public class Kasir extends javax.swing.JPanel {
             .addGroup(pnPricelistLayout.createSequentialGroup()
                 .addGap(19, 19, 19)
                 .addComponent(jLabel1)
-                .addContainerGap(559, Short.MAX_VALUE))
+                .addContainerGap(593, Short.MAX_VALUE))
         );
         pnPricelistLayout.setVerticalGroup(
             pnPricelistLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnPricelistLayout.createSequentialGroup()
                 .addGap(17, 17, 17)
                 .addComponent(jLabel1)
-                .addContainerGap(474, Short.MAX_VALUE))
+                .addContainerGap(527, Short.MAX_VALUE))
         );
 
         pnMain.add(pnPricelist, "card2");
@@ -80,11 +81,11 @@ public class Kasir extends javax.swing.JPanel {
         pnTambah.setLayout(pnTambahLayout);
         pnTambahLayout.setHorizontalGroup(
             pnTambahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 696, Short.MAX_VALUE)
+            .addGap(0, 730, Short.MAX_VALUE)
         );
         pnTambahLayout.setVerticalGroup(
             pnTambahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 511, Short.MAX_VALUE)
+            .addGap(0, 564, Short.MAX_VALUE)
         );
 
         pnMain.add(pnTambah, "card3");
