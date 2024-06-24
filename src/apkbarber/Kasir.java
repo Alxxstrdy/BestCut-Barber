@@ -4,12 +4,24 @@
  */
 package apkbarber;
 
-import java.awt.print.PageFormat;
-import java.awt.print.Paper;
+import popup.DataBarjas;
+import popup.Berhasil;
+import config.koneksi;
+import java.awt.Color;
+import java.awt.event.KeyEvent;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -21,15 +33,71 @@ public class Kasir extends javax.swing.JPanel {
     /**
      * Creates new form Kasir
      */
-
+   private final Connection conn;
     private int total=0;
+    private String userID;
     
-    public Kasir() {
+    public Kasir(String userID) {
         initComponents();
+        conn = koneksi.getConnection();
+        loadData();
+        setTabelModel();
+        invoiceid();
+        this.userID = userID;
+        lKasir.setText(getUserID());
     }
     
+        public String getUserID() {
+        return userID;
+    }
    
+    public void Kembalian(){
+        int tot = Integer.parseInt(ttotal.getText().substring(3));
+        int bay = Integer.parseInt(tBayar.getText());
+        int kem = bay - tot;
+        tKembalian.setText("Rp."+kem);
+    }
     
+    public void Invoice(){
+        
+        SimpleDateFormat dat, wak;
+        Date dt = new Date();
+        dat = new SimpleDateFormat("dd-MM-yyyy");
+        wak = new SimpleDateFormat("HH:mm:ss");
+        String waktu = wak.format(dt);
+        String tgl  = dat.format(dt);
+        String total = ttotal.getText();
+        String dibayar = tBayar.getText();
+        String kembalian = tKembalian.getText();
+        String noTrans = tNoTrans.getText();
+        String kasir = lKasir.getText();
+        
+
+        String no = tNoTrans.getText();
+        tInvoice.setText("\n\t                    BARBER\n"
+                + "\t        Jl.Veteran.41 Nganjuk \n\n"
+                + "\n     " + tgl +"\t         " + waktu + "\t\t" + kasir + "\n"
+                + "     " + noTrans + "\n"
+                + "===========================================\n"
+                + "Nama Barang\t\tHarga \tTot harga\n"
+                + "===========================================\n");
+        
+                for (int i = 0; i < tabSementara.getRowCount(); i++){
+            String nama = tabSementara.getValueAt(i, 1).toString();
+            String harga = tabSementara.getValueAt(i, 3).toString();
+            String subtotal = tabSementara.getValueAt(i, 4).toString();
+            
+            tInvoice.setText(tInvoice.getText() + nama  + "\t" + harga + "\t" + subtotal +"\n");
+        }
+        tInvoice.setText(tInvoice.getText()+ "\n===========================================\n"
+                + "\t\tTOTAL    :\t" + total + "\n"
+                + "\t\t\t---------------------\n"
+                + "\t\tDIBAYAR :\tRp." + dibayar + "\n"
+                + "\t\tKEMBALI :\t" + kembalian + "\n"
+                + "===========================================\n"
+                + "                 TERIMAKASIH ATAS KUNJUNGAN ANDA");
+                
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -41,63 +109,714 @@ public class Kasir extends javax.swing.JPanel {
     private void initComponents() {
 
         pnMain = new javax.swing.JPanel();
-        pnPricelist = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        pnTransaksi = new javax.swing.JPanel();
+        bReset = new Palette.Panel();
+        jLabel12 = new javax.swing.JLabel();
+        bTambah = new Palette.Panel();
+        jLabel2 = new javax.swing.JLabel();
+        tNoTrans = new javax.swing.JLabel();
+        bUpdate = new Palette.Panel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        ttotal = new javax.swing.JLabel();
+        bSimpan = new Palette.Panel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        tBayar = new javax.swing.JTextField();
+        tKembalian = new javax.swing.JLabel();
+        bPrint = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        tabSementara = new Palette.JTable_Custom();
+        lKasir = new javax.swing.JLabel();
+        lKasir1 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
         pnTambah = new javax.swing.JPanel();
+        tInvoice = new javax.swing.JTextArea();
+        tnocust = new javax.swing.JLabel();
+        tIdUser = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(730, 564));
-        setLayout(new java.awt.CardLayout());
+        setLayout(new java.awt.BorderLayout());
 
         pnMain.setBackground(new java.awt.Color(255, 255, 255));
         pnMain.setLayout(new java.awt.CardLayout());
 
-        pnPricelist.setBackground(new java.awt.Color(255, 255, 255));
+        pnTransaksi.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel1.setText("BUAT TRANSAKSI");
+        bReset.setBackground(new java.awt.Color(231, 76, 60));
+        bReset.setRoundBottomLeft(10);
+        bReset.setRoundBottomRight(10);
+        bReset.setRoundTopLeft(10);
+        bReset.setRoundTopRight(10);
+        bReset.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                bResetMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                bResetMouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                bResetMousePressed(evt);
+            }
+        });
 
-        javax.swing.GroupLayout pnPricelistLayout = new javax.swing.GroupLayout(pnPricelist);
-        pnPricelist.setLayout(pnPricelistLayout);
-        pnPricelistLayout.setHorizontalGroup(
-            pnPricelistLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnPricelistLayout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(jLabel1)
-                .addContainerGap(593, Short.MAX_VALUE))
+        jLabel12.setFont(new java.awt.Font("NEXT ART", 1, 12)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(123, 25, 15));
+        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel12.setText("RESET");
+        jLabel12.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        javax.swing.GroupLayout bResetLayout = new javax.swing.GroupLayout(bReset);
+        bReset.setLayout(bResetLayout);
+        bResetLayout.setHorizontalGroup(
+            bResetLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE)
         );
-        pnPricelistLayout.setVerticalGroup(
-            pnPricelistLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnPricelistLayout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addComponent(jLabel1)
-                .addContainerGap(527, Short.MAX_VALUE))
+        bResetLayout.setVerticalGroup(
+            bResetLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
         );
 
-        pnMain.add(pnPricelist, "card2");
+        bTambah.setBackground(new java.awt.Color(46, 204, 113));
+        bTambah.setFocusCycleRoot(true);
+        bTambah.setRoundBottomLeft(10);
+        bTambah.setRoundBottomRight(10);
+        bTambah.setRoundTopLeft(10);
+        bTambah.setRoundTopRight(10);
+        bTambah.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                bTambahMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                bTambahMouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                bTambahMousePressed(evt);
+            }
+        });
+
+        jLabel2.setFont(new java.awt.Font("NEXT ART", 1, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(32, 142, 78));
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("TAMBAH");
+        jLabel2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        javax.swing.GroupLayout bTambahLayout = new javax.swing.GroupLayout(bTambah);
+        bTambah.setLayout(bTambahLayout);
+        bTambahLayout.setHorizontalGroup(
+            bTambahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)
+        );
+        bTambahLayout.setVerticalGroup(
+            bTambahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        tNoTrans.setFont(new java.awt.Font("NEXT ART", 1, 14)); // NOI18N
+        tNoTrans.setText("TRANSAKSI");
+
+        bUpdate.setBackground(new java.awt.Color(9, 132, 227));
+        bUpdate.setPreferredSize(new java.awt.Dimension(73, 30));
+        bUpdate.setRoundBottomLeft(10);
+        bUpdate.setRoundBottomRight(10);
+        bUpdate.setRoundTopLeft(10);
+        bUpdate.setRoundTopRight(10);
+        bUpdate.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                bUpdateMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                bUpdateMouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                bUpdateMousePressed(evt);
+            }
+        });
+
+        jLabel3.setFont(new java.awt.Font("NEXT ART", 1, 14)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(6, 89, 153));
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("UPDATE");
+        jLabel3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        javax.swing.GroupLayout bUpdateLayout = new javax.swing.GroupLayout(bUpdate);
+        bUpdate.setLayout(bUpdateLayout);
+        bUpdateLayout.setHorizontalGroup(
+            bUpdateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
+        );
+        bUpdateLayout.setVerticalGroup(
+            bUpdateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
+        );
+
+        jLabel5.setFont(new java.awt.Font("NEXT ART", 1, 14)); // NOI18N
+        jLabel5.setText("TOTAL     :");
+
+        ttotal.setFont(new java.awt.Font("NEXT ART", 1, 14)); // NOI18N
+        ttotal.setText("Rp.0");
+
+        bSimpan.setBackground(new java.awt.Color(2, 131, 145));
+        bSimpan.setPreferredSize(new java.awt.Dimension(73, 30));
+        bSimpan.setRoundBottomLeft(10);
+        bSimpan.setRoundBottomRight(10);
+        bSimpan.setRoundTopLeft(10);
+        bSimpan.setRoundTopRight(10);
+        bSimpan.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                bSimpanMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                bSimpanMouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                bSimpanMousePressed(evt);
+            }
+        });
+
+        jLabel4.setFont(new java.awt.Font("NEXT ART", 1, 12)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(1, 63, 70));
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setText("SIMPAN");
+        jLabel4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        javax.swing.GroupLayout bSimpanLayout = new javax.swing.GroupLayout(bSimpan);
+        bSimpan.setLayout(bSimpanLayout);
+        bSimpanLayout.setHorizontalGroup(
+            bSimpanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)
+        );
+        bSimpanLayout.setVerticalGroup(
+            bSimpanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
+        );
+
+        jLabel6.setFont(new java.awt.Font("NEXT ART", 1, 14)); // NOI18N
+        jLabel6.setText("BAYAR     :");
+
+        jLabel7.setFont(new java.awt.Font("NEXT ART", 1, 14)); // NOI18N
+        jLabel7.setText("KEMBALIAN :");
+
+        tBayar.setFont(new java.awt.Font("NEXT ART", 0, 14)); // NOI18N
+        tBayar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tBayarKeyPressed(evt);
+            }
+        });
+
+        tKembalian.setFont(new java.awt.Font("NEXT ART", 1, 14)); // NOI18N
+        tKembalian.setText("Rp.0");
+
+        bPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/print.png"))); // NOI18N
+        bPrint.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        bPrint.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                bPrintMousePressed(evt);
+            }
+        });
+
+        jPanel1.setBackground(new java.awt.Color(2, 131, 145));
+
+        tabSementara.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        tabSementara.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4", "Title 5"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, true, false, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(tabSementara, javax.swing.GroupLayout.DEFAULT_SIZE, 678, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(tabSementara, javax.swing.GroupLayout.PREFERRED_SIZE, 193, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        lKasir.setFont(new java.awt.Font("Lucida Fax", 0, 14)); // NOI18N
+        lKasir.setText("KASIR");
+
+        lKasir1.setFont(new java.awt.Font("Lucida Fax", 0, 14)); // NOI18N
+        lKasir1.setText("KASIR :");
+
+        jLabel8.setFont(new java.awt.Font("NEXT ART", 1, 14)); // NOI18N
+        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/Kasir1.png"))); // NOI18N
+
+        jLabel9.setFont(new java.awt.Font("NEXT ART", 1, 14)); // NOI18N
+        jLabel9.setText("BUAT TRANSAKSI");
+
+        javax.swing.GroupLayout pnTransaksiLayout = new javax.swing.GroupLayout(pnTransaksi);
+        pnTransaksi.setLayout(pnTransaksiLayout);
+        pnTransaksiLayout.setHorizontalGroup(
+            pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnTransaksiLayout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnTransaksiLayout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel9)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(pnTransaksiLayout.createSequentialGroup()
+                        .addGroup(pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnTransaksiLayout.createSequentialGroup()
+                                .addComponent(bPrint)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(bSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(bReset, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(pnTransaksiLayout.createSequentialGroup()
+                                .addGroup(pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnTransaksiLayout.createSequentialGroup()
+                                        .addComponent(jLabel5)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(ttotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnTransaksiLayout.createSequentialGroup()
+                                        .addGroup(pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel7)
+                                            .addComponent(jLabel6))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(tBayar, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
+                                            .addComponent(tKembalian, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(pnTransaksiLayout.createSequentialGroup()
+                                .addComponent(bTambah, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(bUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lKasir1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lKasir, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(tNoTrans)))
+                        .addGap(20, 20, 20))))
+        );
+        pnTransaksiLayout.setVerticalGroup(
+            pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnTransaksiLayout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(26, 26, 26)
+                .addGroup(pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(bUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(tNoTrans)
+                        .addComponent(lKasir, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lKasir1))
+                    .addComponent(bTambah, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ttotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(15, 15, 15)
+                .addGroup(pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tBayar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(15, 15, 15)
+                .addGroup(pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
+                    .addComponent(tKembalian, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
+                .addGroup(pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(bPrint, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(bReset, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(bSimpan, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(21, 21, 21))
+        );
+
+        pnMain.add(pnTransaksi, "card2");
 
         pnTambah.setBackground(new java.awt.Color(255, 255, 255));
+
+        tInvoice.setColumns(20);
+        tInvoice.setFont(new java.awt.Font("Segoe UI Semibold", 0, 10)); // NOI18N
+        tInvoice.setRows(2);
+        tInvoice.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        tnocust.setText("jLabel4");
+
+        tIdUser.setText("jLabel8");
 
         javax.swing.GroupLayout pnTambahLayout = new javax.swing.GroupLayout(pnTambah);
         pnTambah.setLayout(pnTambahLayout);
         pnTambahLayout.setHorizontalGroup(
             pnTambahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 730, Short.MAX_VALUE)
+            .addGroup(pnTambahLayout.createSequentialGroup()
+                .addGap(56, 56, 56)
+                .addComponent(tInvoice, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 232, Short.MAX_VALUE)
+                .addGroup(pnTambahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnTambahLayout.createSequentialGroup()
+                        .addComponent(tIdUser)
+                        .addGap(90, 90, 90))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnTambahLayout.createSequentialGroup()
+                        .addComponent(tnocust)
+                        .addGap(98, 98, 98))))
         );
         pnTambahLayout.setVerticalGroup(
             pnTambahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 564, Short.MAX_VALUE)
+            .addGroup(pnTambahLayout.createSequentialGroup()
+                .addGroup(pnTambahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnTambahLayout.createSequentialGroup()
+                        .addGap(99, 99, 99)
+                        .addComponent(tnocust)
+                        .addGap(86, 86, 86)
+                        .addComponent(tIdUser))
+                    .addGroup(pnTambahLayout.createSequentialGroup()
+                        .addGap(60, 60, 60)
+                        .addComponent(tInvoice, javax.swing.GroupLayout.PREFERRED_SIZE, 485, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         pnMain.add(pnTambah, "card3");
 
-        add(pnMain, "card2");
+        add(pnMain, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void bTambahMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bTambahMousePressed
+        boolean closable = true;
+        DataBarjas data = new DataBarjas(null, closable);
+        data.setVisible(true);
+        
+        loadData();
+    }//GEN-LAST:event_bTambahMousePressed
+
+    private void bTambahMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bTambahMouseEntered
+        bTambah.setBackground(new Color(64,212,126));
+    }//GEN-LAST:event_bTambahMouseEntered
+
+    private void bTambahMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bTambahMouseExited
+        bTambah.setBackground(new Color(46,204,113));
+    }//GEN-LAST:event_bTambahMouseExited
+
+    private void bResetMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bResetMouseEntered
+        bReset.setBackground(new Color(234,97,83));
+    }//GEN-LAST:event_bResetMouseEntered
+
+    private void bResetMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bResetMouseExited
+        bReset.setBackground(new Color(231,76,60));
+    }//GEN-LAST:event_bResetMouseExited
+
+    private void bResetMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bResetMousePressed
+        resetTabel();
+        
+    }//GEN-LAST:event_bResetMousePressed
+
+    private void bUpdateMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bUpdateMousePressed
+        totalHarga();       
+    }//GEN-LAST:event_bUpdateMousePressed
+
+    private void bUpdateMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bUpdateMouseEntered
+        bUpdate.setBackground(new Color(16,145,246));
+    }//GEN-LAST:event_bUpdateMouseEntered
+
+    private void bUpdateMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bUpdateMouseExited
+        bUpdate.setBackground(new Color(9,132,227));
+    }//GEN-LAST:event_bUpdateMouseExited
+
+    private void bSimpanMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bSimpanMouseEntered
+        bSimpan.setBackground(new Color(2,154,170));
+    }//GEN-LAST:event_bSimpanMouseEntered
+
+    private void bSimpanMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bSimpanMouseExited
+        bSimpan.setBackground(new Color(2,131,145));
+    }//GEN-LAST:event_bSimpanMouseExited
+
+    private void bSimpanMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bSimpanMousePressed
+        custId();
+        simpanTransaksi();
+        detailTransaksi();
+        
+        boolean closable = true;
+        Berhasil data = new Berhasil(null, closable);
+        data.setVisible(true);
+        resetTabel();
+        pnMain.removeAll();
+        pnMain.add(new Transaksi());
+        pnMain.repaint();
+        pnMain.revalidate();       
+    }//GEN-LAST:event_bSimpanMousePressed
+
+    private void tBayarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tBayarKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            Kembalian();
+            Invoice();
+            getId();
+        }
+    }//GEN-LAST:event_tBayarKeyPressed
+
+    private void bPrintMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bPrintMousePressed
+       try {
+           tInvoice.print();
+       } catch (PrinterException ex) {
+           Logger.getLogger(Kasir.class.getName()).log(Level.SEVERE, null, ex);
+       }
+    }//GEN-LAST:event_bPrintMousePressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel bPrint;
+    private Palette.Panel bReset;
+    private Palette.Panel bSimpan;
+    private Palette.Panel bTambah;
+    private Palette.Panel bUpdate;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel lKasir;
+    private javax.swing.JLabel lKasir1;
     private javax.swing.JPanel pnMain;
-    private javax.swing.JPanel pnPricelist;
     private javax.swing.JPanel pnTambah;
+    private javax.swing.JPanel pnTransaksi;
+    private javax.swing.JTextField tBayar;
+    private javax.swing.JLabel tIdUser;
+    private javax.swing.JTextArea tInvoice;
+    private javax.swing.JLabel tKembalian;
+    private javax.swing.JLabel tNoTrans;
+    private Palette.JTable_Custom tabSementara;
+    private javax.swing.JLabel tnocust;
+    private javax.swing.JLabel ttotal;
     // End of variables declaration//GEN-END:variables
+   private void setTabelModel() {
+        DefaultTableModel model = (DefaultTableModel) tabSementara.getModel();
+    }
+
+    private void loadData() {
+      getData((DefaultTableModel) tabSementara.getModel());
+    }
+    
+    private void getData(DefaultTableModel model) {
+        model.setRowCount(0);
+        
+        try {
+            String sql = "SELECT id_barang, nama_brg, qty, harga, subtotal FROM trans_sementara";
+            try (PreparedStatement st = conn.prepareStatement(sql)){
+                ResultSet rs = st.executeQuery();
+                
+                while (rs.next()){
+                    String idBJ = rs.getString("id_barang");
+                    String namaBJ = rs.getString("nama_brg");
+                    int qty = rs.getInt("qty");
+                    int harga = rs.getInt("harga");
+                    int subtotal = rs.getInt("subtotal");
+                            
+                    Object[] rowdata = {idBJ, namaBJ, qty, harga, subtotal};
+                    model.addRow(rowdata);
+                    
+                }
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(Kasir.class.getName()).log(Level.SEVERE, null, e);
+        }
+        
+    }
+    
+        private void getId(){
+            String nama = lKasir.getText();
+            
+            try {
+            String sql = "SELECT id_user FROM user WHERE username =?";
+            try (PreparedStatement st = conn.prepareStatement(sql)){
+                st.setString(1, nama);
+                ResultSet rs = st.executeQuery();
+                
+                while (rs.next()){
+                    String iduser = rs.getString ("id_user");
+                    tIdUser.setText(iduser);
+                }
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(Kasir.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+    
+    private void resetTabel(){
+            try {
+            String sql = "DELETE FROM trans_sementara";
+            try(PreparedStatement st = conn.prepareStatement(sql)) {
+                int rowDelete = st.executeUpdate();
+                if (rowDelete > 0){
+                    loadData();
+                    ttotal.setText("Rp.0");
+                    tBayar.setText(null);
+                    tKembalian.setText("Rp.0");
+                    tInvoice.setText(null);
+                }
+                   }
+        } catch (SQLException e) {
+            Logger.getLogger(Kasir.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+    
+    public void invoiceid()
+    {
+        SimpleDateFormat wkt;
+        Date dt = new Date();
+        wkt = new SimpleDateFormat("yyyyMM");
+        String w = wkt.format(dt);
+                try {
+            
+            Statement s = conn.createStatement();
+            ResultSet rs = s.executeQuery("SELECT MAX(id_transaksi) FROM transaksi");
+            rs.next();
+            rs.getString("MAX(id_transaksi)");
+            if (rs.getString("MAX(id_transaksi)") == null) {
+                tNoTrans.setText("BCBB"+w+"01");     
+            } else {
+                long id = Long.parseLong(rs.getString("MAX(id_transaksi)").substring(4, rs.getString("MAX(id_transaksi)").length()));
+                id++;
+                tNoTrans.setText("BCBB" + String.format("%08d", id));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }      
+    }
+        public void custId()
+    {
+        SimpleDateFormat dtt;
+        Date dt = new Date();
+        dtt = new SimpleDateFormat("yyyyMM");
+        String d = dtt.format(dt);
+
+                 try {
+            
+            Statement s = conn.createStatement();
+            ResultSet rs = s.executeQuery("SELECT MAX(id_customer) FROM customer");
+            rs.next();
+            rs.getString("MAX(id_customer)");
+            if (rs.getString("MAX(id_customer)") == null) {
+                tnocust.setText("CS"+d+"01");     
+            } else {
+                long id = Long.parseLong(rs.getString("MAX(id_customer)").substring(2, rs.getString("MAX(id_customer)").length()));
+                id++;
+                tnocust.setText("CS" + String.format("%08d", id));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }      
+           String idInvo = tnocust.getText();
+            
+                   try {
+            String sql = "INSERT INTO customer (id_customer) VALUES (?)";
+            try(PreparedStatement st = conn.prepareStatement(sql)) {
+                st.setString(1, idInvo);
+
+                int rowInserted = st.executeUpdate();
+                if (rowInserted > 0){
+                    loadData();
+                }
+            } 
+        } catch (SQLException e) {
+            Logger.getLogger(DataBarjas.class.getName()).log(Level.SEVERE, null, e);
+        }
+             
+    }
+        
+        public void totalHarga(){
+        int hitung = 0;
+        
+        for (int i = 0; i < tabSementara.getRowCount(); i++) {
+            hitung = hitung + Integer.parseInt(tabSementara.getValueAt(i, 4).toString());
+        }
+        ttotal.setText("Rp."+hitung);
+
+        
+        }
+        
+        private void simpanTransaksi(){
+        SimpleDateFormat tgl, jam;
+        Date dt = new Date();
+        tgl = new SimpleDateFormat("yyyy-MM-dd");
+        jam = new SimpleDateFormat("HH:mm:ss");
+        String waktu = jam.format(dt);
+        String tanggal = tgl.format(dt);
+        String id = tNoTrans.getText();
+        int total = Integer.parseInt(ttotal.getText().substring(3));
+        String idUser = tIdUser.getText();
+        String idCustomer = tnocust.getText();
+        
+                
+                try {
+            String sql = "INSERT INTO transaksi (id_transaksi, tgl_transaksi, waktu_transaksi, total_harga, id_customer, id_user) VALUES (?,?,?,?,?,?)";
+            try(PreparedStatement st = conn.prepareStatement(sql)) {
+                st.setString(1, id);
+                st.setString(2, tanggal);
+                st.setString(3, waktu);
+                st.setInt(4, total);
+                st.setString(5, idCustomer);
+                st.setString(6,idUser);
+                
+                st.executeUpdate();
+               
+            } 
+        } catch (SQLException e) {
+            Logger.getLogger(Kasir.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+        private void detailTransaksi(){
+            String id, nama, qty, harga, subtotal;
+            String notrans = tNoTrans.getText();
+            try {
+              
+                for(int i=0;i<tabSementara.getRowCount();i++){
+                    id = tabSementara.getValueAt(i, 0).toString();
+                    qty = tabSementara.getValueAt(i, 2).toString();
+                    subtotal = tabSementara.getValueAt(i, 4).toString();
+                    
+                    
+                    String sql = "INSERT INTO detail_transaksi(id_transaksi, id_barjas, subtotal, qty) VALUES (?,?,?,?)";
+                    PreparedStatement st = conn.prepareStatement(sql);
+                    st.setString(1, notrans);
+                    st.setString(2, id);
+                    st.setString(3, subtotal);
+                    st.setString(4, subtotal);
+                    
+                    st.execute();
+                }
+                
+            } catch (Exception e) {
+            }
+            
+       }
 }

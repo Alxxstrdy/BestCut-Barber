@@ -5,7 +5,6 @@
 package apkbarber;
 
 import com.formdev.flatlaf.FlatLightLaf;
-import com.mysql.cj.jdbc.PreparedStatementWrapper;
 import config.koneksi;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
@@ -13,9 +12,6 @@ import java.awt.event.MouseEvent;
 import java.security.MessageDigest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.sql.SQLException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.Connection;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -150,7 +146,7 @@ public class Loginsite extends javax.swing.JFrame {
             }
         });
 
-        jLabel7.setFont(new java.awt.Font("Eras Bold ITC", 0, 14)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("NEXT ART", 1, 18)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel7.setText("LOGIN");
@@ -179,7 +175,7 @@ public class Loginsite extends javax.swing.JFrame {
             }
         });
 
-        wPassword.setFont(new java.awt.Font("Humanst521 BT", 1, 12)); // NOI18N
+        wPassword.setFont(new java.awt.Font("NEXT ART", 0, 12)); // NOI18N
         wPassword.setForeground(new java.awt.Color(255, 0, 0));
         wPassword.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         wPassword.setText("jLabel8");
@@ -199,6 +195,9 @@ public class Loginsite extends javax.swing.JFrame {
             .addGroup(BelakangLayout.createSequentialGroup()
                 .addGroup(BelakangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(BelakangLayout.createSequentialGroup()
+                        .addGap(120, 120, 120)
+                        .addComponent(bLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(BelakangLayout.createSequentialGroup()
                         .addGap(81, 81, 81)
                         .addGroup(BelakangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(BelakangLayout.createSequentialGroup()
@@ -213,15 +212,14 @@ public class Loginsite extends javax.swing.JFrame {
                             .addComponent(jLabel6)
                             .addComponent(tusername))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(eyeHide, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(BelakangLayout.createSequentialGroup()
-                        .addGap(120, 120, 120)
-                        .addGroup(BelakangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(wPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(bLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(eyeHide, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 113, Short.MAX_VALUE)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(83, 83, 83))
+            .addGroup(BelakangLayout.createSequentialGroup()
+                .addGap(66, 66, 66)
+                .addComponent(wPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(BelakangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BelakangLayout.createSequentialGroup()
                     .addContainerGap(352, Short.MAX_VALUE)
@@ -253,10 +251,10 @@ public class Loginsite extends javax.swing.JFrame {
                             .addComponent(eyeHide, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(tpassword, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
-                        .addComponent(bLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(wPassword)))
-                .addContainerGap(59, Short.MAX_VALUE))
+                        .addComponent(bLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(wPassword)
+                .addContainerGap(60, Short.MAX_VALUE))
             .addGroup(BelakangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BelakangLayout.createSequentialGroup()
                     .addContainerGap(280, Short.MAX_VALUE)
@@ -303,7 +301,6 @@ public class Loginsite extends javax.swing.JFrame {
     }//GEN-LAST:event_bLoginMouseExited
 
     private void bLoginMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bLoginMousePressed
-        bLogin.setBackground(new Color(222, 91, 91));
         prosesLogin();
     }//GEN-LAST:event_bLoginMousePressed
 
@@ -387,72 +384,6 @@ public class Loginsite extends javax.swing.JFrame {
     private javax.swing.JTextField tusername;
     private javax.swing.JLabel wPassword;
     // End of variables declaration//GEN-END:variables
-private String getMd5java(String message){
-    String digest = null;
-    try {
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        byte[] hash = md.digest(message.getBytes("UTF-8"));
-        
-        StringBuilder sb = new StringBuilder(2*hash.length);
-        for(byte b : hash) {
-            sb.append(String.format("%02x", b & 0xff));
-        }
-        digest = sb.toString();
-        
-    } catch (Exception e) {
-        Logger.getLogger(Loginsite.class.getName()).log(Level.SEVERE, null, e );
-                
-    }
-    return digest;
-}   
-private boolean validasiInput(){
-    boolean valid = false;
-    if (tusername.getText().trim().isEmpty()){
-        wPassword.setText("Username tidak boleh kosong");
-    }else if (tpassword.getText().trim().isEmpty()){
-        wPassword.setText("Password tidak boleh kosong");
-    }else{
-        valid=true;
-    }
-    return valid;
-}
-private boolean checklogin(String username, String password){
-    if(conn != null){
-        try {
-            String sql= "SELECT *FROM user WHERE Username=? AND Password=?";
-            PreparedStatement st = conn.prepareStatement(sql);
-            st.setString(1, username);
-            st.setString(2, password);
-            
-            ResultSet rs = st.executeQuery();
-            if(rs.next()){
-                return true;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    return false;
-}
-private void prosesLogin(){
-    if (validasiInput()){
-        String username = tusername.getText();
-        String password = new String(tpassword.getPassword());
-        String hashedPassword = getMd5java(password);
-        
-        if(checklogin(username, hashedPassword)){
-            MenuUtama mn = new MenuUtama();
-            mn.setVisible(true);
-            mn.revalidate();
-            
-            dispose();
-        }else {
-            wPassword.setText("Username/Password salah");
-            tusername.setText("Username");
-            tpassword.setText("Password");
-        }
-    }
-}
 
     private void setShowPassword() {
         eyeHide.setVisible(false);
@@ -475,5 +406,54 @@ private void prosesLogin(){
         
         });
         
+    }
+
+    private void prosesLogin() {
+        String username = tusername.getText();
+        String password = tpassword.getText();
+        if (username.equals("") && !password.equals("")){
+            wPassword.setText("USERNAME TIDAK BOLEH KOSONG");
+        }else if (!username.equals("Username") && password.equals("Password")){
+            wPassword.setText("PASSWORD TIDAK BOLEH KOSONG");
+        }else if (username.equals("Username") && password.equals("Password")){
+            wPassword.setText("USERNAME DAN PASSWORD TIDAK BOLEH KOSONG");
+        }else if (!username.equals("Username") && !password.equals("Password")){
+            try {
+           
+            String sql = "SELECT * FROM user WHERE username = ? AND password = md5(?)";
+            
+            java.sql.PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setString(1, username);
+            statement.setString(2, password);
+            java.sql.ResultSet rs = statement.executeQuery();
+            
+            if (rs.next()){
+            new MenuUtama(username).setVisible(true);
+                dispose();
+            } else {
+                wPassword.setText("Username/Password Salah");   
+                tusername.setText("Username");
+                tpassword.setText("Password");
+            }
+        }   catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+                 }               
+        }
+    }
+    
+    public static String getMd5Java(String message){
+    String digest = null;
+    try{
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        byte[] hash = md.digest(message.getBytes("UTF-8"));
+        StringBuilder sb = new StringBuilder(2 * hash.length);
+        for (byte b :  hash) {
+            sb.append(String.format("%02x", b & 0xff));
+        }
+        digest = sb.toString();
+    } catch(Exception e){
+        Logger.getLogger(Loginsite.class.getName()).log(Level.SEVERE, null, e);
+    }
+    return digest;
     }
 }   

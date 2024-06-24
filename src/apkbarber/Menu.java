@@ -4,17 +4,30 @@
  */
 package apkbarber;
 
+import config.koneksi;
+import java.awt.Color;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Alxxstrdy
  */
 public class Menu extends javax.swing.JPanel {
 
-    /**
-     * Creates new form Menu
-     */
+    
+    private Connection conn;
     public Menu() {
         initComponents();
+        conn = (Connection) koneksi.getConnection();
+        loadData();
+        profitLoss();
+        Close();
     }
 
     /**
@@ -26,10 +39,421 @@ public class Menu extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        panel7 = new Palette.Panel();
+        jLabel11 = new javax.swing.JLabel();
+        pPenBul = new javax.swing.JLabel();
+        panel8 = new Palette.Panel();
+        jLabel12 = new javax.swing.JLabel();
+        pPenBulin = new javax.swing.JLabel();
+        vLoss = new javax.swing.JLabel();
+        vProfit = new javax.swing.JLabel();
+        panel9 = new Palette.Panel();
+        jLabel14 = new javax.swing.JLabel();
+        TotPel = new javax.swing.JLabel();
+        lTanda = new javax.swing.JLabel();
+        pnOC = new Palette.Panel();
+        LOC = new javax.swing.JLabel();
+
         setLayout(new java.awt.CardLayout());
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel8.setFont(new java.awt.Font("NEXT ART", 1, 14)); // NOI18N
+        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/Hom1.png"))); // NOI18N
+
+        jLabel9.setFont(new java.awt.Font("NEXT ART", 1, 18)); // NOI18N
+        jLabel9.setText("HOME");
+
+        panel7.setBackground(new java.awt.Color(2, 131, 145));
+        panel7.setPreferredSize(new java.awt.Dimension(250, 250));
+        panel7.setRoundBottomLeft(20);
+        panel7.setRoundBottomRight(20);
+        panel7.setRoundTopLeft(20);
+        panel7.setRoundTopRight(20);
+
+        jLabel11.setFont(new java.awt.Font("NEXT ART", 0, 14)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel11.setText("pendapatan BULAN LALU");
+
+        pPenBul.setFont(new java.awt.Font("NEXT ART", 1, 24)); // NOI18N
+        pPenBul.setForeground(new java.awt.Color(255, 255, 255));
+        pPenBul.setText("Rp.0000000000");
+
+        javax.swing.GroupLayout panel7Layout = new javax.swing.GroupLayout(panel7);
+        panel7.setLayout(panel7Layout);
+        panel7Layout.setHorizontalGroup(
+            panel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel7Layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addGroup(panel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pPenBul)
+                    .addComponent(jLabel11))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        panel7Layout.setVerticalGroup(
+            panel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel7Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(jLabel11)
+                .addGap(18, 18, 18)
+                .addComponent(pPenBul)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        panel8.setBackground(new java.awt.Color(2, 131, 145));
+        panel8.setPreferredSize(new java.awt.Dimension(250, 250));
+        panel8.setRoundBottomLeft(20);
+        panel8.setRoundBottomRight(20);
+        panel8.setRoundTopLeft(20);
+        panel8.setRoundTopRight(20);
+
+        jLabel12.setFont(new java.awt.Font("NEXT ART", 0, 14)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel12.setText("pendapatan bulan ini");
+
+        pPenBulin.setFont(new java.awt.Font("NEXT ART", 1, 24)); // NOI18N
+        pPenBulin.setForeground(new java.awt.Color(255, 255, 255));
+        pPenBulin.setText("Rp.0000000000");
+
+        vLoss.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/loss.png"))); // NOI18N
+
+        vProfit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/profit.png"))); // NOI18N
+
+        javax.swing.GroupLayout panel8Layout = new javax.swing.GroupLayout(panel8);
+        panel8.setLayout(panel8Layout);
+        panel8Layout.setHorizontalGroup(
+            panel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel8Layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addGroup(panel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panel8Layout.createSequentialGroup()
+                        .addComponent(jLabel12)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(panel8Layout.createSequentialGroup()
+                        .addComponent(pPenBulin)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(vProfit, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(58, 58, 58))))
+            .addGroup(panel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel8Layout.createSequentialGroup()
+                    .addContainerGap(258, Short.MAX_VALUE)
+                    .addComponent(vLoss, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(56, 56, 56)))
+        );
+        panel8Layout.setVerticalGroup(
+            panel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel8Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(jLabel12)
+                .addGap(18, 18, 18)
+                .addGroup(panel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(vProfit, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pPenBulin))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(panel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel8Layout.createSequentialGroup()
+                    .addContainerGap(55, Short.MAX_VALUE)
+                    .addComponent(vLoss, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(32, 32, 32)))
+        );
+
+        panel9.setBackground(new java.awt.Color(2, 131, 145));
+        panel9.setPreferredSize(new java.awt.Dimension(250, 250));
+        panel9.setRoundBottomLeft(20);
+        panel9.setRoundBottomRight(20);
+        panel9.setRoundTopLeft(20);
+        panel9.setRoundTopRight(20);
+
+        jLabel14.setFont(new java.awt.Font("NEXT ART", 0, 14)); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel14.setText("TOTAL PELANGGAN");
+
+        TotPel.setFont(new java.awt.Font("NEXT ART", 1, 24)); // NOI18N
+        TotPel.setForeground(new java.awt.Color(255, 255, 255));
+        TotPel.setText("0000000000000");
+
+        javax.swing.GroupLayout panel9Layout = new javax.swing.GroupLayout(panel9);
+        panel9.setLayout(panel9Layout);
+        panel9Layout.setHorizontalGroup(
+            panel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel9Layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addGroup(panel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(TotPel)
+                    .addComponent(jLabel14))
+                .addContainerGap(35, Short.MAX_VALUE))
+        );
+        panel9Layout.setVerticalGroup(
+            panel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel9Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(jLabel14)
+                .addGap(18, 18, 18)
+                .addComponent(TotPel)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        lTanda.setFont(new java.awt.Font("Rage Italic", 0, 36)); // NOI18N
+        lTanda.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lTanda.setText("jLabel1");
+
+        pnOC.setBackground(new java.awt.Color(46, 204, 113));
+        pnOC.setRoundBottomLeft(20);
+        pnOC.setRoundBottomRight(20);
+        pnOC.setRoundTopLeft(20);
+        pnOC.setRoundTopRight(20);
+        pnOC.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                pnOCMousePressed(evt);
+            }
+        });
+
+        LOC.setFont(new java.awt.Font("NEXT ART", 1, 48)); // NOI18N
+        LOC.setForeground(new java.awt.Color(255, 255, 255));
+        LOC.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        LOC.setText("ABCDE");
+        LOC.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        javax.swing.GroupLayout pnOCLayout = new javax.swing.GroupLayout(pnOC);
+        pnOC.setLayout(pnOCLayout);
+        pnOCLayout.setHorizontalGroup(
+            pnOCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(LOC, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
+        );
+        pnOCLayout.setVerticalGroup(
+            pnOCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(LOC, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel9))
+                    .addComponent(panel8, javax.swing.GroupLayout.PREFERRED_SIZE, 303, Short.MAX_VALUE)
+                    .addComponent(panel7, javax.swing.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE)
+                    .addComponent(panel9, javax.swing.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE))
+                .addGap(40, 40, 40)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pnOC, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lTanda, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(20, 20, 20))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(57, 57, 57)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(panel7, javax.swing.GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE)
+                        .addGap(33, 33, 33)
+                        .addComponent(panel8, javax.swing.GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE)
+                        .addGap(33, 33, 33)
+                        .addComponent(panel9, javax.swing.GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE)
+                        .addGap(59, 59, 59))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(8, 8, 8)
+                        .addComponent(lTanda, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(pnOC, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(190, 190, 190))))
+        );
+
+        add(jPanel1, "card2");
     }// </editor-fold>//GEN-END:initComponents
+
+    private void pnOCMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnOCMousePressed
+        if(LOC.getText().equals("CLOSE")){
+        
+        String status = "OPEN";
+        String substatus = "Hello We are";
+        try {
+
+            String sql = "UPDATE opclo SET status=?, substatus=? WHERE id= '001'";
+
+            PreparedStatement st = conn.prepareStatement(sql);
+
+            st.setString(1, status);
+            st.setString(2, substatus);
+
+            int rowUpdated = st.executeUpdate();
+            if (rowUpdated > 0) {
+            
+                Close();
+
+            }
+
+        } catch (SQLException e) {
+            Logger.getLogger(Reservasi.class.getName()).log(Level.SEVERE, null, e);
+        }
+        }else if(LOC.getText().equals("OPEN")){
+            
+        String status = "CLOSE";
+        String substatus = "Sorry We Are";
+        try {
+
+            String sql = "UPDATE opclo SET status=?, substatus=? WHERE id= '001'";
+
+            PreparedStatement st = conn.prepareStatement(sql);
+
+            st.setString(1, status);
+            st.setString(2, substatus);
+
+            int rowUpdated = st.executeUpdate();
+            if (rowUpdated > 0) {
+            
+                Close();
+
+            }
+
+        } catch (SQLException e) {
+            Logger.getLogger(Reservasi.class.getName()).log(Level.SEVERE, null, e);
+        }
+        }
+    }//GEN-LAST:event_pnOCMousePressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel LOC;
+    private javax.swing.JLabel TotPel;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel lTanda;
+    private javax.swing.JLabel pPenBul;
+    private javax.swing.JLabel pPenBulin;
+    private Palette.Panel panel7;
+    private Palette.Panel panel8;
+    private Palette.Panel panel9;
+    private Palette.Panel pnOC;
+    private javax.swing.JLabel vLoss;
+    private javax.swing.JLabel vProfit;
     // End of variables declaration//GEN-END:variables
+
+    private void profitLoss() {
+       int bulLal = Integer.parseInt(pPenBul.getText().substring(3));
+       int bulIn = Integer.parseInt(pPenBulin.getText().substring(3));
+       
+       if(bulIn > bulLal){
+           vProfit.setVisible(true);
+           vLoss.setVisible(false);
+       }else if (bulLal > bulIn) {
+           vProfit.setVisible(false);
+           vLoss.setVisible(true);
+       }
+    }
+    
+    private void loadData(){
+        getDataBulin();
+        getDataBulLal();
+        getDataCustomer();
+    }
+    
+    
+    public void getDataBulin(){
+                try {
+            String sql = "SELECT SUM(total_harga) AS total_pendapatan_bulan_ini FROM transaksi WHERE YEAR(tgl_transaksi)=YEAR(CURDATE())AND MONTH(tgl_transaksi)=MONTH(CURDATE())";
+            try (PreparedStatement st = conn.prepareStatement(sql)) {
+                ResultSet rs = st.executeQuery();
+
+                while (rs.next()) {
+                    int bulin = rs.getInt("total_pendapatan_bulan_ini");
+                    pPenBulin.setText("RP."+bulin);
+            }
+            }
+                
+        } catch (SQLException e) {
+            Logger.getLogger(PriceList.class.getName()).log(Level.SEVERE, null, e);
+        }
+   }
+
+    private void getDataBulLal() {
+                        try {
+            String sql = "SELECT SUM(total_harga) AS total_pendapatan_bulan_lalu FROM transaksi WHERE YEAR(tgl_transaksi)= YEAR(CURDATE() - INTERVAL 1 MONTH) AND MONTH(tgl_transaksi)=MONTH(CURDATE() - INTERVAL 1 MONTH)";
+            try (PreparedStatement st = conn.prepareStatement(sql)) {
+                ResultSet rs = st.executeQuery();
+
+                while (rs.next()) {
+                    int bulal = rs.getInt("total_pendapatan_bulan_lalu");
+                    pPenBul.setText("RP."+bulal);
+            }
+            }
+                
+        } catch (SQLException e) {
+            Logger.getLogger(PriceList.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+
+    private void getDataCustomer() {
+                        try {
+            String sql = "SELECT COUNT(*) AS total_customer FROM customer";
+            try (PreparedStatement st = conn.prepareStatement(sql)) {
+                ResultSet rs = st.executeQuery();
+
+                while (rs.next()) {
+                    String totalcus = rs.getString("total_customer");
+                    TotPel.setText(totalcus);
+            }
+            }
+                
+        } catch (SQLException e) {
+            Logger.getLogger(PriceList.class.getName()).log(Level.SEVERE, null, e);
+        }        
+    }
+    
+    private void Close(){
+        
+        try {
+            String sql = "SELECT status, substatus FROM opclo";
+            try (PreparedStatement st = conn.prepareStatement(sql)) {
+                ResultSet rs = st.executeQuery();
+
+                while (rs.next()) {
+                    String status = rs.getString("status");
+                    String substatus = rs.getString("substatus");
+                    LOC.setText(status);
+                    lTanda.setText(substatus);
+                    
+                    if(LOC.getText().equals("CLOSE")){
+                        pnOC.setBackground(new Color(214,48,49));
+                    try {
+
+                    String con = "DELETE FROM reservasi";
+
+                    PreparedStatement sta = conn.prepareStatement(con);
+
+
+                    sta.executeUpdate();
+
+                    
+
+                    } catch (SQLException e) {
+                    Logger.getLogger(Reservasi.class.getName()).log(Level.SEVERE, null, e);
+                    }
+                    
+                    } else if (LOC.getText().equals("OPEN")){
+                        pnOC.setBackground(new Color(46,204,113));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(Reservasi.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
 }

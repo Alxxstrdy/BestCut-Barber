@@ -4,7 +4,29 @@
  */
 package apkbarber;
 
+import popup.Berhasil;
+import com.mysql.cj.protocol.Resultset;
+import java.sql.Statement;
+import java.sql.Connection;
+import config.koneksi;
 import javax.swing.table.DefaultTableModel;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.plaf.nimbus.NimbusStyle;
+import popup.PeringatanKosong;
+import popup.PeringatanLebih;
+import java.awt.Color;
+import popup.BerhasilHapus;
+import popup.BerhasilUpdate;
+import popup.YesNoList;
+
+
 
 /**
  *
@@ -12,11 +34,16 @@ import javax.swing.table.DefaultTableModel;
  */
 public class PriceList extends javax.swing.JPanel {
 
-    /**
-     * Creates new form PriceList
-     */
+   private final Connection conn;
+   
     public PriceList() {
         initComponents();
+        
+        conn = koneksi.getConnection();
+        setTabelModel();
+        loadData();
+        tID.setEditable(false);
+        btnDelete.setVisible(false);
     }
 
     /**
@@ -32,25 +59,24 @@ public class PriceList extends javax.swing.JPanel {
         pnPricelist = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         vTabel = new Palette.JTable_Custom();
-        bCancel2 = new Palette.Panel();
-        jLabel16 = new javax.swing.JLabel();
-        bSelesai = new Palette.Panel();
+        jLabel8 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
-        bTambah = new Palette.Panel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
+        btnDelete = new Palette.Panel();
+        jLabel15 = new javax.swing.JLabel();
+        btnAdd = new Palette.Panel();
+        lTambah = new javax.swing.JLabel();
         pnTambah = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        tID = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         tNama = new javax.swing.JTextField();
         tHarga = new javax.swing.JTextField();
-        bCAncel = new Palette.Panel();
-        jLabel6 = new javax.swing.JLabel();
-        bSelesaii = new Palette.Panel();
-        jLabel7 = new javax.swing.JLabel();
+        tID = new javax.swing.JTextField();
+        bBatal = new Palette.Panel();
+        lbatal = new javax.swing.JLabel();
+        bSave = new Palette.Panel();
+        lsave = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(730, 564));
         setLayout(new java.awt.CardLayout());
@@ -77,124 +103,137 @@ public class PriceList extends javax.swing.JPanel {
                 {null, null, null}
             },
             new String [] {
-                "ID Barang/Jasa", "Nama ", "Harga"
+                "ID", "NAMA", "HARGA"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         vTabel.setRowHeight(20);
         vTabel.setShowGrid(true);
+        vTabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                vTabelMousePressed(evt);
+            }
+        });
         jScrollPane2.setViewportView(vTabel);
 
-        bCancel2.setBackground(new java.awt.Color(255, 51, 51));
-        bCancel2.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                bCancel2MouseClicked(evt);
+        jLabel8.setFont(new java.awt.Font("NEXT ART", 1, 14)); // NOI18N
+        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/list1.png"))); // NOI18N
+
+        jLabel12.setFont(new java.awt.Font("NEXT ART", 1, 14)); // NOI18N
+        jLabel12.setText("list barang & jasa");
+
+        btnDelete.setBackground(new java.awt.Color(214, 48, 49));
+        btnDelete.setFocusCycleRoot(true);
+        btnDelete.setRoundBottomLeft(10);
+        btnDelete.setRoundBottomRight(10);
+        btnDelete.setRoundTopLeft(10);
+        btnDelete.setRoundTopRight(10);
+        btnDelete.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnDeleteMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnDeleteMouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                btnDeleteMousePressed(evt);
             }
         });
 
-        jLabel16.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel16.setText("CANCEL");
+        jLabel15.setFont(new java.awt.Font("NEXT ART", 0, 14)); // NOI18N
+        jLabel15.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel15.setText("HAPUS");
+        jLabel15.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        javax.swing.GroupLayout bCancel2Layout = new javax.swing.GroupLayout(bCancel2);
-        bCancel2.setLayout(bCancel2Layout);
-        bCancel2Layout.setHorizontalGroup(
-            bCancel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel16, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE)
+        javax.swing.GroupLayout btnDeleteLayout = new javax.swing.GroupLayout(btnDelete);
+        btnDelete.setLayout(btnDeleteLayout);
+        btnDeleteLayout.setHorizontalGroup(
+            btnDeleteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)
         );
-        bCancel2Layout.setVerticalGroup(
-            bCancel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bCancel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel16)
-                .addContainerGap())
-        );
-
-        bSelesai.setBackground(new java.awt.Color(0, 153, 153));
-
-        jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel12.setText("SELESAI");
-
-        javax.swing.GroupLayout bSelesaiLayout = new javax.swing.GroupLayout(bSelesai);
-        bSelesai.setLayout(bSelesaiLayout);
-        bSelesaiLayout.setHorizontalGroup(
-            bSelesaiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE)
-        );
-        bSelesaiLayout.setVerticalGroup(
-            bSelesaiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bSelesaiLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel12)
-                .addContainerGap())
+        btnDeleteLayout.setVerticalGroup(
+            btnDeleteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
         );
 
-        bTambah.setBackground(new java.awt.Color(102, 255, 51));
-        bTambah.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                bTambahMouseClicked(evt);
+        btnAdd.setBackground(new java.awt.Color(2, 131, 145));
+        btnAdd.setFocusCycleRoot(true);
+        btnAdd.setRoundBottomLeft(10);
+        btnAdd.setRoundBottomRight(10);
+        btnAdd.setRoundTopLeft(10);
+        btnAdd.setRoundTopRight(10);
+        btnAdd.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnAddMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnAddMouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                btnAddMousePressed(evt);
             }
         });
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setText("TAMBAH");
+        lTambah.setFont(new java.awt.Font("NEXT ART", 0, 14)); // NOI18N
+        lTambah.setForeground(new java.awt.Color(255, 255, 255));
+        lTambah.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lTambah.setText("TAMBAH");
+        lTambah.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        javax.swing.GroupLayout bTambahLayout = new javax.swing.GroupLayout(bTambah);
-        bTambah.setLayout(bTambahLayout);
-        bTambahLayout.setHorizontalGroup(
-            bTambahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE)
+        javax.swing.GroupLayout btnAddLayout = new javax.swing.GroupLayout(btnAdd);
+        btnAdd.setLayout(btnAddLayout);
+        btnAddLayout.setHorizontalGroup(
+            btnAddLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lTambah, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)
         );
-        bTambahLayout.setVerticalGroup(
-            bTambahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bTambahLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel5)
-                .addContainerGap())
+        btnAddLayout.setVerticalGroup(
+            btnAddLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lTambah, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
         );
-
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel1.setText("DAFTAR LIST BARANG DAN JASA");
 
         javax.swing.GroupLayout pnPricelistLayout = new javax.swing.GroupLayout(pnPricelist);
         pnPricelist.setLayout(pnPricelistLayout);
         pnPricelistLayout.setHorizontalGroup(
             pnPricelistLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnPricelistLayout.createSequentialGroup()
-                .addContainerGap(414, Short.MAX_VALUE)
-                .addComponent(bTambah, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(bSelesai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24)
-                .addComponent(bCancel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40))
             .addGroup(pnPricelistLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(pnPricelistLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(pnPricelistLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 718, Short.MAX_VALUE)
-                    .addContainerGap()))
+                .addGap(20, 20, 20)
+                .addGroup(pnPricelistLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnPricelistLayout.createSequentialGroup()
+                        .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnPricelistLayout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 690, Short.MAX_VALUE)
+                        .addGap(20, 20, 20))
+                    .addGroup(pnPricelistLayout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel12)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         pnPricelistLayout.setVerticalGroup(
             pnPricelistLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnPricelistLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 476, Short.MAX_VALUE)
+                .addGap(20, 20, 20)
+                .addGroup(pnPricelistLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(34, 34, 34)
                 .addGroup(pnPricelistLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(bTambah, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(bCancel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(bSelesai, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(38, 38, 38))
-            .addGroup(pnPricelistLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(pnPricelistLayout.createSequentialGroup()
-                    .addGap(86, 86, 86)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(150, Short.MAX_VALUE)))
+                    .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
+                .addGap(123, 123, 123))
         );
 
         pnMain.add(pnPricelist, "card2");
@@ -203,21 +242,6 @@ public class PriceList extends javax.swing.JPanel {
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel4.setText("INPUT BARANG/JASA");
-
-        tID.setText("ID Barang/Jasa");
-        tID.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                tIDFocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                tIDFocusLost(evt);
-            }
-        });
-        tID.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tIDActionPerformed(evt);
-            }
-        });
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel9.setText("ID BARANG/JASA");
@@ -228,7 +252,6 @@ public class PriceList extends javax.swing.JPanel {
         jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel11.setText("HARGA");
 
-        tNama.setText("Nama Barang/Jasa");
         tNama.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 tNamaFocusGained(evt);
@@ -243,7 +266,6 @@ public class PriceList extends javax.swing.JPanel {
             }
         });
 
-        tHarga.setText("Harga");
         tHarga.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 tHargaFocusGained(evt);
@@ -258,50 +280,80 @@ public class PriceList extends javax.swing.JPanel {
             }
         });
 
-        bCAncel.setBackground(new java.awt.Color(255, 0, 0));
-        bCAncel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                bCAncelMouseClicked(evt);
+        tID.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tIDActionPerformed(evt);
             }
         });
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6.setText("CANCEL");
-
-        javax.swing.GroupLayout bCAncelLayout = new javax.swing.GroupLayout(bCAncel);
-        bCAncel.setLayout(bCAncelLayout);
-        bCAncelLayout.setHorizontalGroup(
-            bCAncelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bCAncelLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-        bCAncelLayout.setVerticalGroup(
-            bCAncelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
-        );
-
-        bSelesaii.setBackground(new java.awt.Color(0, 153, 153));
-        bSelesaii.addMouseListener(new java.awt.event.MouseAdapter() {
+        bBatal.setBackground(new java.awt.Color(214, 48, 49));
+        bBatal.setFocusCycleRoot(true);
+        bBatal.setRoundBottomLeft(10);
+        bBatal.setRoundBottomRight(10);
+        bBatal.setRoundTopLeft(10);
+        bBatal.setRoundTopRight(10);
+        bBatal.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                bBatalMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                bBatalMouseExited(evt);
+            }
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                bSelesaiiMousePressed(evt);
+                bBatalMousePressed(evt);
             }
         });
 
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel7.setText("SELESAI");
+        lbatal.setFont(new java.awt.Font("NEXT ART", 0, 14)); // NOI18N
+        lbatal.setForeground(new java.awt.Color(255, 255, 255));
+        lbatal.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbatal.setText("BATAl");
+        lbatal.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        javax.swing.GroupLayout bSelesaiiLayout = new javax.swing.GroupLayout(bSelesaii);
-        bSelesaii.setLayout(bSelesaiiLayout);
-        bSelesaiiLayout.setHorizontalGroup(
-            bSelesaiiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
+        javax.swing.GroupLayout bBatalLayout = new javax.swing.GroupLayout(bBatal);
+        bBatal.setLayout(bBatalLayout);
+        bBatalLayout.setHorizontalGroup(
+            bBatalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lbatal, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)
         );
-        bSelesaiiLayout.setVerticalGroup(
-            bSelesaiiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
+        bBatalLayout.setVerticalGroup(
+            bBatalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lbatal, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
+        );
+
+        bSave.setBackground(new java.awt.Color(2, 131, 145));
+        bSave.setFocusCycleRoot(true);
+        bSave.setRoundBottomLeft(10);
+        bSave.setRoundBottomRight(10);
+        bSave.setRoundTopLeft(10);
+        bSave.setRoundTopRight(10);
+        bSave.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                bSaveMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                bSaveMouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                bSaveMousePressed(evt);
+            }
+        });
+
+        lsave.setFont(new java.awt.Font("NEXT ART", 0, 14)); // NOI18N
+        lsave.setForeground(new java.awt.Color(255, 255, 255));
+        lsave.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lsave.setText("SIMPAN");
+        lsave.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        javax.swing.GroupLayout bSaveLayout = new javax.swing.GroupLayout(bSave);
+        bSave.setLayout(bSaveLayout);
+        bSaveLayout.setHorizontalGroup(
+            bSaveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lsave, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)
+        );
+        bSaveLayout.setVerticalGroup(
+            bSaveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lsave, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout pnTambahLayout = new javax.swing.GroupLayout(pnTambah);
@@ -309,46 +361,45 @@ public class PriceList extends javax.swing.JPanel {
         pnTambahLayout.setHorizontalGroup(
             pnTambahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnTambahLayout.createSequentialGroup()
-                .addContainerGap(485, Short.MAX_VALUE)
-                .addComponent(bSelesaii, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(33, 33, 33)
-                .addComponent(bCAncel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 32, 32))
-            .addGroup(pnTambahLayout.createSequentialGroup()
-                .addGap(32, 32, 32)
-                .addGroup(pnTambahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(20, 20, 20)
+                .addGroup(pnTambahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel4)
-                    .addGroup(pnTambahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabel9)
-                        .addComponent(jLabel10)
-                        .addComponent(jLabel11)
-                        .addComponent(tNama)
-                        .addComponent(tID)
-                        .addComponent(tHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 388, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel11)
+                    .addComponent(tNama)
+                    .addComponent(tHarga, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+                    .addComponent(tID))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnTambahLayout.createSequentialGroup()
+                .addGap(0, 498, Short.MAX_VALUE)
+                .addComponent(bSave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(bBatal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(34, 34, 34))
         );
         pnTambahLayout.setVerticalGroup(
             pnTambahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnTambahLayout.createSequentialGroup()
-                .addGap(99, 99, 99)
+                .addGap(20, 20, 20)
                 .addComponent(jLabel4)
-                .addGap(42, 42, 42)
+                .addGap(107, 107, 107)
                 .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(tID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(12, 12, 12)
                 .addComponent(jLabel10)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tNama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel11)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(10, 10, 10)
                 .addComponent(tHarga, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 179, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 189, Short.MAX_VALUE)
                 .addGroup(pnTambahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(bCAncel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(bSelesaii, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(32, 32, 32))
+                    .addComponent(bSave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(bBatal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(22, 22, 22))
         );
 
         pnMain.add(pnTambah, "card3");
@@ -356,46 +407,12 @@ public class PriceList extends javax.swing.JPanel {
         add(pnMain, "card2");
     }// </editor-fold>//GEN-END:initComponents
 
-    private void bCancel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bCancel2MouseClicked
-        pnMain.removeAll();
-        pnMain.add(new Menu()); // Assuming HomePanel is the class for the home screen
-        pnMain.repaint();
-        pnMain.revalidate();
-    }//GEN-LAST:event_bCancel2MouseClicked
-
-    private void bTambahMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bTambahMouseClicked
-        pnMain.removeAll();
-        pnMain.add(pnTambah);
-        pnMain.repaint();;
-        pnMain.revalidate();
-    }//GEN-LAST:event_bTambahMouseClicked
-
-    private void tIDFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tIDFocusGained
-        if (tID.getText().equals("ID Pelanggan")) {
-            tID.setText("");
-        }
-    }//GEN-LAST:event_tIDFocusGained
-
-    private void tIDFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tIDFocusLost
-        if (tID.getText().equals("")) {
-            tID.setText("ID Pelanggan");
-        }
-    }//GEN-LAST:event_tIDFocusLost
-
-    private void tIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tIDActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tIDActionPerformed
-
     private void tHargaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tHargaFocusGained
-        if (tHarga.getText().equals("No Telp")) {
-            tHarga.setText("");
-        }
+
     }//GEN-LAST:event_tHargaFocusGained
 
     private void tHargaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tHargaFocusLost
-        if (tHarga.getText().equals("")) {
-            tHarga.setText("No Telp");
-        }
+
     }//GEN-LAST:event_tHargaFocusLost
 
     private void tHargaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tHargaActionPerformed
@@ -403,63 +420,145 @@ public class PriceList extends javax.swing.JPanel {
     }//GEN-LAST:event_tHargaActionPerformed
 
     private void tNamaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tNamaFocusGained
-        if (tNama.getText().equals("Nama Pelanggan")) {
-            tNama.setText("");
-        }
+
     }//GEN-LAST:event_tNamaFocusGained
 
     private void tNamaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tNamaFocusLost
-        if (tNama.getText().equals("")) {
-            tNama.setText("Nama Pelanggan");
-        }
+
     }//GEN-LAST:event_tNamaFocusLost
 
     private void tNamaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tNamaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_tNamaActionPerformed
 
-    private void bCAncelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bCAncelMouseClicked
+    private void tIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tIDActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tIDActionPerformed
+
+    private void bBatalMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bBatalMouseEntered
+        bBatal.setBackground(new Color(218,69,70));
+    }//GEN-LAST:event_bBatalMouseEntered
+
+    private void bBatalMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bBatalMouseExited
+        bBatal.setBackground(new Color(214,48,49));
+    }//GEN-LAST:event_bBatalMouseExited
+
+    private void bBatalMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bBatalMousePressed
         pnMain.removeAll();
-        pnMain.add(pnPricelist);
+        pnMain.add(new Menu());
         pnMain.repaint();
-        pnMain.revalidate();        // TODO add your handling code here:
-    }//GEN-LAST:event_bCAncelMouseClicked
+        pnMain.revalidate();
+    }//GEN-LAST:event_bBatalMousePressed
 
-    private void bSelesaiiMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bSelesaiiMousePressed
-            vTabel.setModel(tbl);
-            tbl.addRow(new Object[]{
-                    tID.getText(), tNama.getText(), tHarga.getText()
-                    });
-            vTabel.setModel(tbl);
-            tID.setText("ID Barang/Jasa");
-            tNama.setText("Nama Barang/Jasa");
-            tHarga.setText("Harga");
-             pnMain.removeAll();
-              pnMain.add(pnPricelist);
-              pnMain.repaint();
-              pnMain.revalidate();   
-    }//GEN-LAST:event_bSelesaiiMousePressed
+    private void bSaveMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bSaveMouseEntered
+        bSave.setBackground(new Color (2,154,170));
+    }//GEN-LAST:event_bSaveMouseEntered
 
-    int baris = 0;
-    static Object kolom[] = {"ID", "Nama", "Harga"};
-    DefaultTableModel tbl = new DefaultTableModel (kolom, baris);       
+    private void bSaveMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bSaveMouseExited
+        bSave.setBackground(new Color (2,131,145));
+    }//GEN-LAST:event_bSaveMouseExited
+
+    private void bSaveMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bSaveMousePressed
+        if (tNama.getText().length()>=20){
+            boolean closable = true;
+            PeringatanLebih data = new PeringatanLebih(null, closable);
+            data.setVisible(true);
+            tNama.setText(null);
+            tHarga.setText(null);
+        } else if(tNama.getText().equals("")) {
+            boolean closable = true;
+            PeringatanKosong data = new PeringatanKosong(null, closable);
+            data.setVisible(true);
+            tNama.setText(null);
+            tHarga.setText(null);
+        } else if(tHarga.getText().equals("")){
+            boolean closable = true;
+            PeringatanLebih data = new PeringatanLebih(null, closable);
+            data.setVisible(true);
+            tNama.setText(null);
+            tHarga.setText(null);
+        }
+        
+        if (lsave.getText().equals("SIMPAN")) {
+            insertData();
+        } else if (lsave.getText().equals("PERBARUI")) {
+            updateData();
+            lsave.setText("SIMPAN");
+            if (lTambah.getText().equals("UBAH")) {
+            lTambah.setText("TAMBAH");
+
+            btnDelete.setVisible(false);
+
+        }
+        }
+    }//GEN-LAST:event_bSaveMousePressed
+
+    private void btnDeleteMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDeleteMouseEntered
+        btnDelete.setBackground(new Color(218,69,70));
+    }//GEN-LAST:event_btnDeleteMouseEntered
+
+    private void btnDeleteMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDeleteMouseExited
+        btnDelete.setBackground(new Color(214,48,49));
+    }//GEN-LAST:event_btnDeleteMouseExited
+
+    private void btnDeleteMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDeleteMousePressed
+        boolean closable = true;
+        YesNoList data = new YesNoList(null, closable, this);
+        data.setVisible(true);
+        
+
+        if (lTambah.getText().equals("UBAH")) {
+            lTambah.setText("TAMBAH");
+            btnDelete.setVisible(false);
+        }
+    }//GEN-LAST:event_btnDeleteMousePressed
+
+    private void btnAddMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAddMouseEntered
+        btnAdd.setBackground(new Color (2,154,170));
+    }//GEN-LAST:event_btnAddMouseEntered
+
+    private void btnAddMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAddMouseExited
+        btnAdd.setBackground(new Color (2,131,145));
+    }//GEN-LAST:event_btnAddMouseExited
+
+    private void btnAddMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAddMousePressed
+        id();
+        pnMain.removeAll();
+        pnMain.add(pnTambah);
+        pnMain.repaint();;
+        pnMain.revalidate();
+        
+         if (lTambah.getText().equals("UBAH")) {
+            dataTabel();
+            lsave.setText("PERBARUI");
+        }
+    }//GEN-LAST:event_btnAddMousePressed
+
+    private void vTabelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_vTabelMousePressed
+        if (lTambah.getText().equals("TAMBAH")) {
+            lTambah.setText("UBAH");
+
+            btnDelete.setVisible(true);
+
+        }
+    }//GEN-LAST:event_vTabelMousePressed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private Palette.Panel bCAncel;
-    private Palette.Panel bCancel2;
-    private Palette.Panel bSelesai;
-    private Palette.Panel bSelesaii;
-    private Palette.Panel bTambah;
-    private javax.swing.JLabel jLabel1;
+    private Palette.Panel bBatal;
+    private Palette.Panel bSave;
+    private Palette.Panel btnAdd;
+    private Palette.Panel btnDelete;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lTambah;
+    private javax.swing.JLabel lbatal;
+    private javax.swing.JLabel lsave;
     private javax.swing.JPanel pnMain;
     private javax.swing.JPanel pnPricelist;
     private javax.swing.JPanel pnTambah;
@@ -468,4 +567,178 @@ public class PriceList extends javax.swing.JPanel {
     private javax.swing.JTextField tNama;
     private Palette.JTable_Custom vTabel;
     // End of variables declaration//GEN-END:variables
+
+ 
+   private void setTabelModel() {
+        DefaultTableModel model = (DefaultTableModel) vTabel.getModel();
+    }
+
+    private void loadData() {
+      getData((DefaultTableModel) vTabel.getModel());
+    }
+
+    private void getData(DefaultTableModel model) {
+        model.setRowCount(0);
+        
+        try {
+            String sql = "SELECT * FROM barang_jasa ORDER BY id_barjas DESC";
+            try (PreparedStatement st = conn.prepareStatement(sql)){
+                ResultSet rs = st.executeQuery();
+                
+                while (rs.next()){
+                    String idBJ = rs.getString("id_barjas");
+                    String namaBJ = rs.getString("nama_barjas");
+                    int harga = rs.getInt("harga");
+                            
+                    Object[] rowdata = {idBJ, namaBJ, harga};
+                    model.addRow(rowdata);
+                }
+            } 
+        } catch (SQLException e) {
+            Logger.getLogger(PriceList.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+    
+    public void id()
+    {
+        try {
+            
+            Statement s = conn.createStatement();
+            ResultSet rs = s.executeQuery("SELECT MAX(id_barjas) FROM barang_jasa");
+            rs.next();
+            rs.getString("MAX(id_barjas)");
+            if (rs.getString("MAX(id_barjas)") == null) {
+                tID.setText("BJ00001");     
+            } else {
+                long id = Long.parseLong(rs.getString("MAX(id_barjas)").substring(2, rs.getString("MAX(id_barjas)").length()));
+                id++;
+                tID.setText("BJ" + String.format("%05d", id));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }      
+    }
+
+    private void insertData() {
+
+        
+        String idBarjas = tID.getText();
+        String namaBarjas = tNama.getText()+" ";
+        int harga = Integer.parseInt(tHarga.getText());
+        
+        try {
+            String sql = "INSERT INTO barang_jasa (id_barjas, nama_barjas, harga) VALUES (?,?,?)";
+            try(PreparedStatement st = conn.prepareStatement(sql)) {
+                st.setString(1, idBarjas);
+                st.setString(2, namaBarjas);
+                st.setInt(3, harga);
+                
+                int rowInserted = st.executeUpdate();
+                if (rowInserted > 0){
+                boolean closable = true;
+                Berhasil data = new Berhasil(null, closable);
+                data.setVisible(true);
+                    resetForm();
+                    loadData();
+                    showTable();
+                }
+            } 
+        } catch (SQLException e) {
+            Logger.getLogger(PriceList.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+
+    private void resetForm() {
+        tID.setText(null);
+        tNama.setText(null);
+        tHarga.setText(null);
+    }
+
+    private void showTable() {
+        pnMain.removeAll();
+        pnMain.add(pnPricelist);
+        pnMain.repaint();
+        pnMain.revalidate();  
+    }
+        public void deleteData() {
+        int selectedRow = vTabel.getSelectedRow();
+        
+            String id = vTabel.getValueAt(selectedRow, 0).toString();
+            try {
+                String sql = "DELETE FROM barang_jasa WHERE id_barjas=?";
+                try (PreparedStatement st = conn.prepareStatement(sql)) {
+                    st.setString(1, id);
+
+                    int rowDeleted = st.executeUpdate();
+                    if (rowDeleted > 0) {
+                        boolean closable = true;
+                        BerhasilHapus data = new BerhasilHapus(null, closable);
+                        data.setVisible(true);
+
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Data Gagal Dihapus");
+                    }
+                }
+            } catch (SQLException e) {
+                Logger.getLogger(Reservasi.class.getName()).log(Level.SEVERE, null, e);
+            }
+         
+        resetForm();
+        loadData();
+        pnMain.removeAll();
+        pnMain.add(pnPricelist);
+        pnMain.repaint();
+        pnMain.revalidate();
+
+
+        
+    }
+        
+     private void updateData() {
+
+        String id = tID.getText();
+        String nama = tNama.getText();
+        String harga = tHarga.getText();
+
+        try {
+
+            String sql = "UPDATE barang_jasa SET nama_barjas=?, harga=? WHERE id_barjas =?";
+
+            PreparedStatement st = conn.prepareStatement(sql);
+
+            st.setString(1, nama);
+            st.setString(2, harga);
+            st.setString(3, id);
+
+            int rowUpdated = st.executeUpdate();
+            if (rowUpdated > 0) {
+
+            boolean closable = true;
+            BerhasilUpdate data = new BerhasilUpdate(null, closable);
+            data.setVisible(true);
+            tNama.setText(null);
+
+                resetForm();
+                loadData();
+                pnMain.removeAll();
+                pnMain.add(pnPricelist);
+                pnMain.repaint();
+                pnMain.revalidate();
+                lTambah.setText("SIMPAN");
+            }
+
+        } catch (SQLException e) {
+            Logger.getLogger(Reservasi.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }        
+        
+         private void dataTabel() {
+
+        int row = vTabel.getSelectedRow();
+        
+        tID.setText(vTabel.getValueAt(row, 0).toString());
+        tNama.setText(vTabel.getValueAt(row, 1).toString());
+        tHarga.setText(vTabel.getValueAt(row, 2).toString());
+         
+         }
 }
