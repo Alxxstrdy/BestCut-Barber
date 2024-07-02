@@ -241,7 +241,7 @@ public class PergantianPass extends javax.swing.JPanel {
 
     private void bCancelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bCancelMousePressed
         pnMain.removeAll();
-        pnMain.add(new Menu());
+        pnMain.add(new Home(userID));
         pnMain.repaint();
         pnMain.revalidate();
     }//GEN-LAST:event_bCancelMousePressed

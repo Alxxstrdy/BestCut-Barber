@@ -354,7 +354,13 @@ public class Loginsite extends javax.swing.JFrame {
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
         try {
-         UIManager.setLookAndFeel(new FlatLightLaf());
+            FlatLightLaf.setup();
+        UIManager.put("TableHeader.background", new Color(2,131,145));
+UIManager.put("TableHeader.foreground", Color.WHITE);
+UIManager.put("Table.selectionBackground", new Color(0, 153, 153));
+UIManager.put("Table.alternateRowColor", new Color(240, 240, 240));
+UIManager.put("Component.focusedBorderColor", new Color(0, 153, 153));
+        
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -8,7 +8,12 @@ import popup.DataBarjas;
 import popup.Berhasil;
 import config.koneksi;
 import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
+import java.awt.print.PageFormat;
+import java.awt.print.Paper;
+import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.sql.Connection;
@@ -16,12 +21,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import popup.BerhasilSelesai;
+import popup.PeringatanHabis;
+import popup.PeringatanKurang;
 
 /**
  *
@@ -45,6 +54,7 @@ public class Kasir extends javax.swing.JPanel {
         invoiceid();
         this.userID = userID;
         lKasir.setText(getUserID());
+        Reservasi();
     }
     
         public String getUserID() {
@@ -52,10 +62,15 @@ public class Kasir extends javax.swing.JPanel {
     }
    
     public void Kembalian(){
-        int tot = Integer.parseInt(ttotal.getText().substring(3));
-        int bay = Integer.parseInt(tBayar.getText());
-        int kem = bay - tot;
-        tKembalian.setText("Rp."+kem);
+       String total = ttotal.getText().replace(",", "");
+       String bayar = tBayar.getText().replace(",", "");
+        int tot = Integer.parseInt(total.substring(3));
+        int bay = Integer.parseInt(bayar);
+        int kem = bay - tot;        
+        String kembali = Integer.toString(kem).replaceAll("[^\\d]", "");
+        double Rp = Double.parseDouble(kembali);
+        DecimalFormat df = new DecimalFormat("#,###,###");
+        tKembalian.setText("Rp." + df.format(Rp)); 
     }
     
     public void Invoice(){
@@ -87,7 +102,11 @@ public class Kasir extends javax.swing.JPanel {
             String harga = tabSementara.getValueAt(i, 3).toString();
             String subtotal = tabSementara.getValueAt(i, 4).toString();
             
-            tInvoice.setText(tInvoice.getText() + nama  + "\t" + harga + "\t" + subtotal +"\n");
+            if(nama.length() < 13){
+             tInvoice.setText(tInvoice.getText() + nama  + "\t\t" + harga + "\t" + subtotal +"\n");   
+            } else if(nama.length() >= 13){
+             tInvoice.setText(tInvoice.getText() + nama  + "\t" + harga + "\t" + subtotal +"\n");   
+            }
         }
         tInvoice.setText(tInvoice.getText()+ "\n===========================================\n"
                 + "\t\tTOTAL    :\t" + total + "\n"
@@ -132,6 +151,8 @@ public class Kasir extends javax.swing.JPanel {
         lKasir1 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
+        cReservasi = new javax.swing.JComboBox<>();
+        ttotal1 = new javax.swing.JLabel();
         pnTambah = new javax.swing.JPanel();
         tInvoice = new javax.swing.JTextArea();
         tnocust = new javax.swing.JLabel();
@@ -253,7 +274,7 @@ public class Kasir extends javax.swing.JPanel {
         );
 
         jLabel5.setFont(new java.awt.Font("NEXT ART", 1, 14)); // NOI18N
-        jLabel5.setText("TOTAL     :");
+        jLabel5.setText("TOTAL         :");
 
         ttotal.setFont(new java.awt.Font("NEXT ART", 1, 14)); // NOI18N
         ttotal.setText("Rp.0");
@@ -294,15 +315,23 @@ public class Kasir extends javax.swing.JPanel {
         );
 
         jLabel6.setFont(new java.awt.Font("NEXT ART", 1, 14)); // NOI18N
-        jLabel6.setText("BAYAR     :");
+        jLabel6.setText("BAYAR         :");
 
         jLabel7.setFont(new java.awt.Font("NEXT ART", 1, 14)); // NOI18N
         jLabel7.setText("KEMBALIAN :");
 
         tBayar.setFont(new java.awt.Font("NEXT ART", 0, 14)); // NOI18N
+        tBayar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tBayarActionPerformed(evt);
+            }
+        });
         tBayar.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 tBayarKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tBayarKeyReleased(evt);
             }
         });
 
@@ -373,6 +402,10 @@ public class Kasir extends javax.swing.JPanel {
         jLabel9.setFont(new java.awt.Font("NEXT ART", 1, 14)); // NOI18N
         jLabel9.setText("BUAT TRANSAKSI");
 
+        ttotal1.setFont(new java.awt.Font("NEXT ART", 1, 14)); // NOI18N
+        ttotal1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        ttotal1.setText("Reservasi");
+
         javax.swing.GroupLayout pnTransaksiLayout = new javax.swing.GroupLayout(pnTransaksi);
         pnTransaksi.setLayout(pnTransaksiLayout);
         pnTransaksiLayout.setHorizontalGroup(
@@ -395,21 +428,6 @@ public class Kasir extends javax.swing.JPanel {
                                 .addComponent(bReset, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(pnTransaksiLayout.createSequentialGroup()
-                                .addGroup(pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnTransaksiLayout.createSequentialGroup()
-                                        .addComponent(jLabel5)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(ttotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnTransaksiLayout.createSequentialGroup()
-                                        .addGroup(pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel7)
-                                            .addComponent(jLabel6))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(tBayar, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
-                                            .addComponent(tKembalian, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(pnTransaksiLayout.createSequentialGroup()
                                 .addComponent(bTambah, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(bUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -418,7 +436,25 @@ public class Kasir extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(lKasir, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(tNoTrans)))
+                                .addComponent(tNoTrans))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnTransaksiLayout.createSequentialGroup()
+                                .addGroup(pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(pnTransaksiLayout.createSequentialGroup()
+                                        .addGroup(pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel7)
+                                            .addComponent(jLabel6))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(tBayar, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
+                                            .addComponent(tKembalian, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                    .addGroup(pnTransaksiLayout.createSequentialGroup()
+                                        .addComponent(jLabel5)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(ttotal, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(cReservasi, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(ttotal1, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE))))
                         .addGap(20, 20, 20))))
         );
         pnTransaksiLayout.setVerticalGroup(
@@ -441,11 +477,17 @@ public class Kasir extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addGroup(pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(ttotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(15, 15, 15)
-                .addGroup(pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tBayar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ttotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ttotal1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnTransaksiLayout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addGroup(pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tBayar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(pnTransaksiLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cReservasi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(15, 15, 15)
                 .addGroup(pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
@@ -557,35 +599,70 @@ public class Kasir extends javax.swing.JPanel {
     }//GEN-LAST:event_bSimpanMouseExited
 
     private void bSimpanMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bSimpanMousePressed
-        custId();
-        simpanTransaksi();
-        detailTransaksi();
-        
-        boolean closable = true;
-        Berhasil data = new Berhasil(null, closable);
-        data.setVisible(true);
-        resetTabel();
-        pnMain.removeAll();
-        pnMain.add(new Transaksi());
-        pnMain.repaint();
-        pnMain.revalidate();       
+
+        detailTransaksi();     
     }//GEN-LAST:event_bSimpanMousePressed
 
     private void tBayarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tBayarKeyPressed
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+       
+       if (evt.getKeyCode() == KeyEvent.VK_ENTER) { 
+       int total = Integer.parseInt(ttotal.getText().replace(",", "").substring(3));
+       int bayar = Integer.parseInt(tBayar.getText().replace(",", ""));
+        if (bayar<total) {
+        boolean closable = true;
+        PeringatanKurang data = new PeringatanKurang(null, closable);
+        data.setVisible(true);
+        resetTabel();
+        } else if(bayar>=total){
+            
             Kembalian();
             Invoice();
             getId();
         }
+       }
     }//GEN-LAST:event_tBayarKeyPressed
 
     private void bPrintMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bPrintMousePressed
-       try {
-           tInvoice.print();
-       } catch (PrinterException ex) {
-           Logger.getLogger(Kasir.class.getName()).log(Level.SEVERE, null, ex);
-       }
+        PrinterJob job = PrinterJob.getPrinterJob();
+        job.setJobName("Print Data");
+        
+        job.setPrintable(new Printable(){
+        public int print(Graphics pg, PageFormat pf, int pageNum){
+            pf.setOrientation(PageFormat.LANDSCAPE);
+           if(pageNum>0){
+            return Printable.NO_SUCH_PAGE;
+           }
+           Graphics2D g2 = (Graphics2D)pg;
+           g2.translate(pf.getImageableX(), pf.getImageableY());
+           g2.scale(0.65, 0.65);
+           
+           tInvoice.print(g2);
+           
+           return Printable.PAGE_EXISTS;
+        }
+        });    
+        
+        boolean ok = job.printDialog();
+        if(ok){
+            try{
+                
+                job.print();
+            } catch (PrinterException x){
+            x.printStackTrace();}
+        }    
+
     }//GEN-LAST:event_bPrintMousePressed
+
+    private void tBayarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tBayarActionPerformed
+              
+    }//GEN-LAST:event_tBayarActionPerformed
+
+    private void tBayarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tBayarKeyReleased
+        String bayar = tBayar.getText().replaceAll("[^\\d]", "");
+        double Rp = Double.parseDouble(bayar);
+        DecimalFormat df = new DecimalFormat("#,###,###");
+        tBayar.setText(df.format(Rp)); 
+    }//GEN-LAST:event_tBayarKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -594,6 +671,7 @@ public class Kasir extends javax.swing.JPanel {
     private Palette.Panel bSimpan;
     private Palette.Panel bTambah;
     private Palette.Panel bUpdate;
+    private javax.swing.JComboBox<String> cReservasi;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -617,6 +695,7 @@ public class Kasir extends javax.swing.JPanel {
     private Palette.JTable_Custom tabSementara;
     private javax.swing.JLabel tnocust;
     private javax.swing.JLabel ttotal;
+    private javax.swing.JLabel ttotal1;
     // End of variables declaration//GEN-END:variables
    private void setTabelModel() {
         DefaultTableModel model = (DefaultTableModel) tabSementara.getModel();
@@ -759,12 +838,16 @@ public class Kasir extends javax.swing.JPanel {
         for (int i = 0; i < tabSementara.getRowCount(); i++) {
             hitung = hitung + Integer.parseInt(tabSementara.getValueAt(i, 4).toString());
         }
-        ttotal.setText("Rp."+hitung);
+        String total = Integer.toString(hitung).replaceAll("[^\\d]", "");
+        double Rp = Double.parseDouble(total);
+        DecimalFormat df = new DecimalFormat("#,###,###");
+        ttotal.setText("Rp." + df.format(Rp)); 
 
         
         }
         
-        private void simpanTransaksi(){
+        private void simpanTransaksi(){      
+        custId();
         SimpleDateFormat tgl, jam;
         Date dt = new Date();
         tgl = new SimpleDateFormat("yyyy-MM-dd");
@@ -772,7 +855,8 @@ public class Kasir extends javax.swing.JPanel {
         String waktu = jam.format(dt);
         String tanggal = tgl.format(dt);
         String id = tNoTrans.getText();
-        int total = Integer.parseInt(ttotal.getText().substring(3));
+        String tot = ttotal.getText().replace(",", "");
+        int total = Integer.parseInt(tot.substring(3));
         String idUser = tIdUser.getText();
         String idCustomer = tnocust.getText();
         
@@ -793,30 +877,137 @@ public class Kasir extends javax.swing.JPanel {
         } catch (SQLException e) {
             Logger.getLogger(Kasir.class.getName()).log(Level.SEVERE, null, e);
             }
+        
+        
+        
         }
         private void detailTransaksi(){
-            String id, nama, qty, harga, subtotal;
+            String id, nama, qty, harga, subtotal;  
             String notrans = tNoTrans.getText();
-            try {
-              
-                for(int i=0;i<tabSementara.getRowCount();i++){
-                    id = tabSementara.getValueAt(i, 0).toString();
-                    qty = tabSementara.getValueAt(i, 2).toString();
-                    subtotal = tabSementara.getValueAt(i, 4).toString();
-                    
-                    
-                    String sql = "INSERT INTO detail_transaksi(id_transaksi, id_barjas, subtotal, qty) VALUES (?,?,?,?)";
-                    PreparedStatement st = conn.prepareStatement(sql);
-                    st.setString(1, notrans);
-                    st.setString(2, id);
-                    st.setString(3, subtotal);
-                    st.setString(4, subtotal);
-                    
-                    st.execute();
-                }
-                
-            } catch (Exception e) {
-            }
             
-       }
+try {
+    simpanTransaksi();
+    for (int i = 0; i < tabSementara.getRowCount(); i++) {
+        id = tabSementara.getValueAt(i, 0).toString();
+        nama = tabSementara.getValueAt(i, 1).toString();
+        qty = tabSementara.getValueAt(i, 2).toString();
+        subtotal = tabSementara.getValueAt(i, 4).toString();
+
+        
+        String sqlCheck = "SELECT jenis_barjas, stok FROM barang_jasa WHERE id_barjas = ?";
+        PreparedStatement stCheck = conn.prepareStatement(sqlCheck);
+        stCheck.setString(1, id);
+        ResultSet rs = stCheck.executeQuery();
+        
+        if (rs.next()) {
+            String jenisBarjas = rs.getString("jenis_barjas");
+            int stok = rs.getInt("stok");
+
+            if ("BARANG".equalsIgnoreCase(jenisBarjas)) {
+                int qtyInt = Integer.parseInt(qty);
+
+                if (stok < qtyInt) {
+                    // Display warning if stock is not sufficient
+                    boolean closable = true;
+                    PeringatanHabis data = new PeringatanHabis(null, closable);
+                    data.setVisible(true);
+                    resetTabel();
+                } else {
+                    // Update stok in barang_jasa
+                    int newStok = stok - qtyInt;
+                    String sqlUpdate = "UPDATE barang_jasa SET stok = ? WHERE id_barjas = ?";
+                    PreparedStatement stUpdate = conn.prepareStatement(sqlUpdate);
+                    stUpdate.setInt(1, newStok);
+                    stUpdate.setString(2, id);
+                    stUpdate.executeUpdate();
+
+                    if (newStok == 0) {
+        
+                    boolean closable = true;
+                    PeringatanHabis data = new PeringatanHabis(null, closable);
+                    data.setVisible(true);
+                    resetTabel();
+                    } else {
+
+                    
+                    String sqlInsert = "INSERT INTO detail_transaksi(id_transaksi, id_barjas, subtotal, qty) VALUES (?, ?, ?, ?)";
+                    PreparedStatement stInsert = conn.prepareStatement(sqlInsert);
+                    stInsert.setString(1, notrans);
+                    stInsert.setString(2, id);
+                    stInsert.setString(3, subtotal);
+                    stInsert.setString(4, qty);
+                    stInsert.executeUpdate();
+                    
+                    }
+                }
+            } else {
+                
+                String sqlInsert = "INSERT INTO detail_transaksi(id_transaksi, id_barjas, subtotal, qty) VALUES (?, ?, ?, ?)";
+                PreparedStatement stInsert = conn.prepareStatement(sqlInsert);
+                stInsert.setString(1, notrans);
+                stInsert.setString(2, id);
+                stInsert.setString(3, subtotal);
+                stInsert.setString(4, qty);
+                stInsert.executeUpdate();
+            }
+        }
+    }
+} catch (Exception e) {
+    e.printStackTrace();
 }
+
+
+            if(cReservasi.getSelectedItem() !=null){
+            String res = cReservasi.getSelectedItem().toString();
+            try {
+            String sql = "UPDATE reservasi set status = 'Selesai' WHERE nama = ?";
+            try (PreparedStatement st = conn.prepareStatement(sql)){
+                st.setString(1, res);
+                st.executeUpdate();
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(Kasir.class.getName()).log(Level.SEVERE, null, e);
+        }
+        
+        boolean closables = true;
+        BerhasilSelesai dataa = new BerhasilSelesai(null, closables);
+        dataa.setVisible(true);
+
+        resetTabel();
+        pnMain.removeAll();
+        pnMain.add(new Transaksi());
+        pnMain.repaint();
+        pnMain.revalidate();  
+        }
+            
+        boolean closable = true;
+        Berhasil data = new Berhasil(null, closable);
+        data.setVisible(true);
+        resetTabel();
+        pnMain.removeAll();
+        pnMain.add(new Transaksi());
+        pnMain.repaint();
+        pnMain.revalidate();  
+
+       }
+        
+        private void Reservasi(){
+            try {
+            String sql = "SELECT * FROM reservasi WHERE status = 'Belum Selesai'";
+            try (PreparedStatement st = conn.prepareStatement(sql)){
+                ResultSet rs = st.executeQuery();
+                
+                while (rs.next()){
+                    String nama = rs.getString ("nama");
+                    cReservasi.addItem(nama);
+                }
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(Kasir.class.getName()).log(Level.SEVERE, null, e);
+        }
+            cReservasi.setSelectedItem(null);
+    }
+        }
+
+            
+

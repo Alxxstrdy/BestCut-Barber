@@ -165,8 +165,6 @@ import raven.datetime.component.time.TimeSelectionListener;
         Jam = new raven.datetime.component.time.TimePicker();
         pnMain = new javax.swing.JPanel();
         pnView = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        vtabel = new Palette.JTable_Custom();
         btnDelete = new Palette.Panel();
         jLabel15 = new javax.swing.JLabel();
         tSearch = new javax.swing.JTextField();
@@ -185,6 +183,8 @@ import raven.datetime.component.time.TimeSelectionListener;
         lTambah = new javax.swing.JLabel();
         bSelesai = new Palette.Panel();
         jLabel7 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        vtabel = new javax.swing.JTable();
         pnAdd = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -214,43 +214,6 @@ import raven.datetime.component.time.TimeSelectionListener;
         pnMain.setLayout(new java.awt.CardLayout());
 
         pnView.setBackground(new java.awt.Color(255, 255, 255));
-
-        vtabel.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
-            },
-            new String [] {
-                "ID Pelanggan", "Nama Pelanggan", "NO Telp.", "Waktu", "Layanan", "Status"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        vtabel.setRowHeight(20);
-        vtabel.setShowVerticalLines(true);
-        vtabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                vtabelMouseClicked(evt);
-            }
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                vtabelMousePressed(evt);
-            }
-        });
-        jScrollPane2.setViewportView(vtabel);
 
         btnDelete.setBackground(new java.awt.Color(214, 48, 49));
         btnDelete.setFocusCycleRoot(true);
@@ -493,6 +456,32 @@ import raven.datetime.component.time.TimeSelectionListener;
             .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
         );
 
+        vtabel.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
+            },
+            new String [] {
+                "ID Pelanggan", "Nama Pelanggan", "No Telp", "Waktu", "Layanan", "Status"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        vtabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                vtabelMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(vtabel);
+
         javax.swing.GroupLayout pnViewLayout = new javax.swing.GroupLayout(pnView);
         pnView.setLayout(pnViewLayout);
         pnViewLayout.setHorizontalGroup(
@@ -520,14 +509,16 @@ import raven.datetime.component.time.TimeSelectionListener;
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnViewLayout.createSequentialGroup()
                         .addGroup(pnViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(bSelesai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnViewLayout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(bSelesai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnViewLayout.createSequentialGroup()
                                 .addComponent(jLabel14)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel12)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(tSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING))
+                                .addComponent(tSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(20, 20, 20))))
         );
         pnViewLayout.setVerticalGroup(
@@ -546,9 +537,9 @@ import raven.datetime.component.time.TimeSelectionListener;
                 .addGroup(pnViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(bSelesai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(51, 51, 51)
                 .addComponent(lb_Halaman)
@@ -817,28 +808,9 @@ import raven.datetime.component.time.TimeSelectionListener;
         }
     }//GEN-LAST:event_tNoTelpFocusLost
 
-    private void vtabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_vtabelMouseClicked
-        if (lTambah.getText().equals("TAMBAH")) {
-            lTambah.setText("UBAH");
-            btnDelete.setVisible(true);
-            bSelesai.setVisible(true);
-
-        }
-    }//GEN-LAST:event_vtabelMouseClicked
-
     private void tSearchKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tSearchKeyTyped
         searchData();
     }//GEN-LAST:event_tSearchKeyTyped
-
-    private void vtabelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_vtabelMousePressed
-        if (lTambah.getText().equals("TAMBAH")) {
-            lTambah.setText("UBAH");
-
-            btnDelete.setVisible(true);
-            bSelesai.setVisible(true);
-
-        }
-    }//GEN-LAST:event_vtabelMousePressed
 
     private void tSearchFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tSearchFocusGained
         if (tSearch.getText().equals("Search")) {
@@ -972,7 +944,6 @@ import raven.datetime.component.time.TimeSelectionListener;
             boolean closable = true;
             BerhasilSelesai data = new BerhasilSelesai(null, closable);
             data.setVisible(true);
-            tNama.setText(null);
 
                 resetForm();
                 loadData();
@@ -1021,24 +992,6 @@ import raven.datetime.component.time.TimeSelectionListener;
     }//GEN-LAST:event_bSaveMouseExited
 
     private void bSaveMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bSaveMousePressed
-                
-        if (tNama.getText().equals("Nama Pelanggan")){
-            boolean closable = true;
-            PeringatanKosong data = new PeringatanKosong(null, closable);
-            data.setVisible(true);
-            tNama.setText(null);
-        } else if(tNoTelp.getText().equals("No Telp")){
-            boolean closable = true;
-            PeringatanKosong data = new PeringatanKosong(null, closable);
-            data.setVisible(true);
-            tNama.setText(null);
-        }else if(listbarang.getSelectedItem().equals(null)){
-            boolean closable = true;
-            PeringatanKosong data = new PeringatanKosong(null, closable);
-            data.setVisible(true);
-            tNama.setText(null);
-        }
-        
                 getId();
                 if (lsave.getText().equals("SIMPAN")) {
             insertData();
@@ -1055,6 +1008,15 @@ import raven.datetime.component.time.TimeSelectionListener;
         }
 
     }//GEN-LAST:event_bSaveMousePressed
+
+    private void vtabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_vtabelMouseClicked
+        if (lTambah.getText().equals("TAMBAH")) {
+            lTambah.setText("UBAH");
+            btnDelete.setVisible(true);
+            bSelesai.setVisible(true);
+
+        }
+    }//GEN-LAST:event_vtabelMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1085,7 +1047,7 @@ import raven.datetime.component.time.TimeSelectionListener;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lTambah;
     private javax.swing.JLabel lb_Halaman;
     private javax.swing.JLabel lbatal;
@@ -1099,7 +1061,7 @@ import raven.datetime.component.time.TimeSelectionListener;
     private javax.swing.JTextField tNoTelp;
     private javax.swing.JTextField tSearch;
     private javax.swing.JFormattedTextField vWaktu;
-    private Palette.JTable_Custom vtabel;
+    private javax.swing.JTable vtabel;
     // End of variables declaration//GEN-END:variables
 
     private int getTotalData() {
@@ -1137,6 +1099,22 @@ import raven.datetime.component.time.TimeSelectionListener;
         String Layanan = listbarang.getSelectedItem().toString();
         String idbarjas = id_barjas.getText();
         
+        if (tNama.getText().equals("Nama Pelanggan")){
+            boolean closable = true;
+            PeringatanKosong data = new PeringatanKosong(null, closable);
+            data.setVisible(true);
+            tNama.setText(null);
+        } else if(tNoTelp.getText().equals("No Telp")){
+            boolean closable = true;
+            PeringatanKosong data = new PeringatanKosong(null, closable);
+            data.setVisible(true);
+            tNama.setText(null);
+        }else if(listbarang.getSelectedItem().equals(null)){
+            boolean closable = true;
+            PeringatanKosong data = new PeringatanKosong(null, closable);
+            data.setVisible(true);
+            tNama.setText(null);
+        } else {
      
         try {
 
@@ -1166,6 +1144,7 @@ import raven.datetime.component.time.TimeSelectionListener;
 
         } catch (SQLException e) {
             Logger.getLogger(Reservasi.class.getName()).log(Level.SEVERE, null, e);
+        }
         }
     }
 

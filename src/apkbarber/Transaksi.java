@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
@@ -25,6 +26,7 @@ private int halamanSaatIni = 1;
         initComponents();
         conn = koneksi.getConnection();
         loadData();
+        setTabelModel();
     }
 
  
@@ -34,8 +36,6 @@ private int halamanSaatIni = 1;
 
         pnMain = new javax.swing.JPanel();
         pnTransaksi = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        tabTrans = new Palette.JTable_Custom();
         cList = new javax.swing.JComboBox<>();
         jLabel15 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
@@ -48,10 +48,10 @@ private int halamanSaatIni = 1;
         jLabel6 = new javax.swing.JLabel();
         bNext = new Palette.Panel();
         jLabel5 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tabTrans = new javax.swing.JTable();
         pnDetail = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        tabDetail = new Palette.JTable_Custom();
         vTgltran = new javax.swing.JLabel();
         vNotran = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
@@ -59,44 +59,14 @@ private int halamanSaatIni = 1;
         vKasir = new javax.swing.JLabel();
         bKembali = new Palette.Panel();
         jLabel7 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tabDetail = new javax.swing.JTable();
 
         setLayout(new java.awt.CardLayout());
 
         pnMain.setLayout(new java.awt.CardLayout());
 
         pnTransaksi.setBackground(new java.awt.Color(255, 255, 255));
-
-        tabTrans.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
-            },
-            new String [] {
-                "ID Transaksi", "Tanggal", "Total "
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        tabTrans.setRowHeight(20);
-        tabTrans.setShowVerticalLines(true);
-        tabTrans.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                tabTransMousePressed(evt);
-            }
-        });
-        jScrollPane2.setViewportView(tabTrans);
 
         cList.setFont(new java.awt.Font("NEXT ART", 0, 12)); // NOI18N
         cList.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Semua", "Hari ini", "Kemarin", "Bulan ini", "Bulan lalu" }));
@@ -228,24 +198,36 @@ private int halamanSaatIni = 1;
             .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
         );
 
+        tabTrans.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "ID Transaksi", "Tanggal", "Total"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tabTrans.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                tabTransMousePressed(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tabTrans);
+
         javax.swing.GroupLayout pnTransaksiLayout = new javax.swing.GroupLayout(pnTransaksi);
         pnTransaksi.setLayout(pnTransaksiLayout);
         pnTransaksiLayout.setHorizontalGroup(
             pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnTransaksiLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnTransaksiLayout.createSequentialGroup()
-                        .addComponent(jScrollPane2)
-                        .addGap(20, 20, 20))
-                    .addGroup(pnTransaksiLayout.createSequentialGroup()
-                        .addGroup(pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cList, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(pnTransaksiLayout.createSequentialGroup()
-                                .addComponent(jLabel15)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel16)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnTransaksiLayout.createSequentialGroup()
                 .addGap(250, 250, 250)
                 .addGroup(pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -259,6 +241,20 @@ private int halamanSaatIni = 1;
                         .addGap(12, 12, 12)
                         .addComponent(bLast, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(250, 250, 250))
+            .addGroup(pnTransaksiLayout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnTransaksiLayout.createSequentialGroup()
+                        .addComponent(jScrollPane1)
+                        .addGap(20, 20, 20))
+                    .addGroup(pnTransaksiLayout.createSequentialGroup()
+                        .addGroup(pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cList, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(pnTransaksiLayout.createSequentialGroup()
+                                .addComponent(jLabel15)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel16)))
+                        .addGap(552, 552, 552))))
         );
         pnTransaksiLayout.setVerticalGroup(
             pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -269,9 +265,9 @@ private int halamanSaatIni = 1;
                     .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(28, 28, 28)
                 .addComponent(cList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
+                .addGap(31, 31, 31)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
                 .addComponent(lb_Halaman, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(pnTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -286,40 +282,8 @@ private int halamanSaatIni = 1;
 
         pnDetail.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("NEXT ART", 1, 14)); // NOI18N
         jLabel4.setText("DETAIL TRANSAKSI");
-
-        tabDetail.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
-            },
-            new String [] {
-                "ID ", "Nama", "Harga", "Qty", "Subtotal"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        tabDetail.setRowHeight(20);
-        tabDetail.setShowVerticalLines(true);
-        tabDetail.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                tabDetailMousePressed(evt);
-            }
-        });
-        jScrollPane3.setViewportView(tabDetail);
 
         vTgltran.setFont(new java.awt.Font("Lucida Fax", 0, 12)); // NOI18N
         vTgltran.setText("jLabel1");
@@ -363,6 +327,27 @@ private int halamanSaatIni = 1;
             .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
         );
 
+        tabDetail.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "ID Barang", "Nama", "Harga", "Qty", "Subtotal"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(tabDetail);
+
         javax.swing.GroupLayout pnDetailLayout = new javax.swing.GroupLayout(pnDetail);
         pnDetail.setLayout(pnDetailLayout);
         pnDetailLayout.setHorizontalGroup(
@@ -370,25 +355,21 @@ private int halamanSaatIni = 1;
             .addGroup(pnDetailLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(pnDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnDetailLayout.createSequentialGroup()
-                        .addComponent(bKembali, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 690, Short.MAX_VALUE)
                     .addGroup(pnDetailLayout.createSequentialGroup()
                         .addGroup(pnDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 690, Short.MAX_VALUE)
+                            .addComponent(bKembali, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4)
+                            .addGroup(pnDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(vTgltran, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
+                                .addComponent(vNotran, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(vKasir, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(pnDetailLayout.createSequentialGroup()
-                                .addGroup(pnDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4)
-                                    .addGroup(pnDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(vTgltran, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
-                                        .addComponent(vNotran, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(vKasir, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addGroup(pnDetailLayout.createSequentialGroup()
-                                        .addComponent(jLabel1)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(vTotal)))
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addGap(20, 20, 20))))
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(vTotal)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGap(20, 20, 20))
         );
         pnDetailLayout.setVerticalGroup(
             pnDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -401,13 +382,13 @@ private int halamanSaatIni = 1;
                 .addComponent(vNotran)
                 .addGap(54, 54, 54)
                 .addComponent(vKasir)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(pnDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(vTotal))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 99, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 98, Short.MAX_VALUE)
                 .addComponent(bKembali, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(25, 25, 25))
         );
@@ -416,21 +397,6 @@ private int halamanSaatIni = 1;
 
         add(pnMain, "card2");
     }// </editor-fold>//GEN-END:initComponents
-
-    private void tabDetailMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabDetailMousePressed
-
-    }//GEN-LAST:event_tabDetailMousePressed
-
-    private void tabTransMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabTransMousePressed
-        pnMain.removeAll();
-        pnMain.add(pnDetail);
-        pnMain.repaint();
-        pnMain.revalidate();  
-        
-        int row = tabTrans.getSelectedRow();
-        String id = tabTrans.getValueAt(row, 0).toString();
-        getDataDetail((DefaultTableModel) tabDetail.getModel(), id);
-    }//GEN-LAST:event_tabTransMousePressed
 
     private void bFirstMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bFirstMouseClicked
         halamanSaatIni = 1;
@@ -473,6 +439,17 @@ private int halamanSaatIni = 1;
         loadData();
     }//GEN-LAST:event_cListActionPerformed
 
+    private void tabTransMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabTransMousePressed
+        pnMain.removeAll();
+        pnMain.add(pnDetail);
+        pnMain.repaint();
+        pnMain.revalidate();  
+        
+        int row = tabTrans.getSelectedRow();
+        String id = tabTrans.getValueAt(row, 0).toString();
+        getDataDetail((DefaultTableModel) tabDetail.getModel(), id);
+    }//GEN-LAST:event_tabTransMousePressed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private Palette.Panel bBefore;
@@ -490,14 +467,14 @@ private int halamanSaatIni = 1;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel lb_Halaman;
     private javax.swing.JPanel pnDetail;
     private javax.swing.JPanel pnMain;
     private javax.swing.JPanel pnTransaksi;
-    private Palette.JTable_Custom tabDetail;
-    private Palette.JTable_Custom tabTrans;
+    private javax.swing.JTable tabDetail;
+    private javax.swing.JTable tabTrans;
     private javax.swing.JLabel vKasir;
     private javax.swing.JLabel vNotran;
     private javax.swing.JLabel vTgltran;
@@ -534,6 +511,7 @@ private int halamanSaatIni = 1;
     }
        
     private void loadData() {
+      calculateTotalPages();
       int totalData = getTotalData();
       lb_Halaman.setText(String.valueOf("Halaman" + halamanSaatIni + " dari Total Data " + totalData));
 
@@ -551,7 +529,6 @@ private int halamanSaatIni = 1;
             try (PreparedStatement st = conn.prepareStatement(sql)){
                 st.setInt(1,startIndex);
                 st.setInt(2, entriespPage);
-                
                 ResultSet rs = st.executeQuery();
                 
                 while (rs.next()){
@@ -682,7 +659,7 @@ private int halamanSaatIni = 1;
                     String idt = rs.getString("dt.id_transaksi");
                     String tgl = rs.getString("tgl_transaksi");
                     String waktu = rs.getString("t.waktu_transaksi");
-                    String total = rs.getString("total_harga");
+                    String total = rs.getString("total_harga").replaceAll("[^\\d]", "");
                     String idb = rs.getString("dt.id_barjas");
                     String nama = rs.getString("bj.nama_barjas");
                     String harga = rs.getString("bj.harga");
@@ -695,7 +672,9 @@ private int halamanSaatIni = 1;
                     
                     vTgltran.setText("Tanggal dan Waktu Transaksi : " + tgl+"  "+waktu);
                     vNotran.setText("No Transaksi :" + idt);
-                    vTotal.setText(total);
+                    double totall = Double.parseDouble(total);                    
+                    DecimalFormat df = new DecimalFormat("#,###,###");
+                    vTotal.setText(df.format(totall));
                     vKasir.setText(idu);
                     
                 }

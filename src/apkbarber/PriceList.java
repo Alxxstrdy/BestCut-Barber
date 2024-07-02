@@ -5,7 +5,6 @@
 package apkbarber;
 
 import popup.Berhasil;
-import com.mysql.cj.protocol.Resultset;
 import java.sql.Statement;
 import java.sql.Connection;
 import config.koneksi;
@@ -13,12 +12,9 @@ import javax.swing.table.DefaultTableModel;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.plaf.nimbus.NimbusStyle;
 import popup.PeringatanKosong;
 import popup.PeringatanLebih;
 import java.awt.Color;
@@ -35,15 +31,22 @@ import popup.YesNoList;
 public class PriceList extends javax.swing.JPanel {
 
    private final Connection conn;
+   private String userID;
    
-    public PriceList() {
+    public PriceList(String UserID) {
         initComponents();
         
         conn = koneksi.getConnection();
         setTabelModel();
         loadData();
+        this.userID = UserID;
         tID.setEditable(false);
         btnDelete.setVisible(false);
+        tStok.setVisible(false);
+        lStok.setVisible(false);
+    }
+     public String getUserID() {
+     return userID;
     }
 
     /**
@@ -57,14 +60,14 @@ public class PriceList extends javax.swing.JPanel {
 
         pnMain = new javax.swing.JPanel();
         pnPricelist = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        vTabel = new Palette.JTable_Custom();
         jLabel8 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         btnDelete = new Palette.Panel();
         jLabel15 = new javax.swing.JLabel();
         btnAdd = new Palette.Panel();
         lTambah = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        vTabel = new javax.swing.JTable();
         pnTambah = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
@@ -77,6 +80,10 @@ public class PriceList extends javax.swing.JPanel {
         lbatal = new javax.swing.JLabel();
         bSave = new Palette.Panel();
         lsave = new javax.swing.JLabel();
+        cJenis = new javax.swing.JComboBox<>();
+        jLabel13 = new javax.swing.JLabel();
+        lStok = new javax.swing.JLabel();
+        tStok = new javax.swing.JTextField();
 
         setPreferredSize(new java.awt.Dimension(730, 564));
         setLayout(new java.awt.CardLayout());
@@ -85,43 +92,6 @@ public class PriceList extends javax.swing.JPanel {
         pnMain.setLayout(new java.awt.CardLayout());
 
         pnPricelist.setBackground(new java.awt.Color(255, 255, 255));
-
-        vTabel.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
-            },
-            new String [] {
-                "ID", "NAMA", "HARGA"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        vTabel.setRowHeight(20);
-        vTabel.setShowGrid(true);
-        vTabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                vTabelMousePressed(evt);
-            }
-        });
-        jScrollPane2.setViewportView(vTabel);
 
         jLabel8.setFont(new java.awt.Font("NEXT ART", 1, 14)); // NOI18N
         jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/list1.png"))); // NOI18N
@@ -199,6 +169,32 @@ public class PriceList extends javax.swing.JPanel {
             .addComponent(lTambah, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
         );
 
+        vTabel.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "ID", "NAMA", "HARGA", "JENIS", "STOK"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        vTabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                vTabelMousePressed(evt);
+            }
+        });
+        jScrollPane1.setViewportView(vTabel);
+
         javax.swing.GroupLayout pnPricelistLayout = new javax.swing.GroupLayout(pnPricelist);
         pnPricelist.setLayout(pnPricelistLayout);
         pnPricelistLayout.setHorizontalGroup(
@@ -211,14 +207,15 @@ public class PriceList extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnPricelistLayout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 690, Short.MAX_VALUE)
-                        .addGap(20, 20, 20))
                     .addGroup(pnPricelistLayout.createSequentialGroup()
-                        .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel12)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGroup(pnPricelistLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 690, Short.MAX_VALUE)
+                            .addGroup(pnPricelistLayout.createSequentialGroup()
+                                .addComponent(jLabel8)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel12)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(20, 20, 20))))
         );
         pnPricelistLayout.setVerticalGroup(
             pnPricelistLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -231,9 +228,9 @@ public class PriceList extends javax.swing.JPanel {
                 .addGroup(pnPricelistLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
-                .addGap(123, 123, 123))
+                .addGap(31, 31, 31)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(103, Short.MAX_VALUE))
         );
 
         pnMain.add(pnPricelist, "card2");
@@ -356,34 +353,51 @@ public class PriceList extends javax.swing.JPanel {
             .addComponent(lsave, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
         );
 
+        cJenis.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "BARANG", "JASA" }));
+        cJenis.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cJenisActionPerformed(evt);
+            }
+        });
+
+        jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel13.setText("JENIS");
+
+        lStok.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lStok.setText("STOK");
+
         javax.swing.GroupLayout pnTambahLayout = new javax.swing.GroupLayout(pnTambah);
         pnTambah.setLayout(pnTambahLayout);
         pnTambahLayout.setHorizontalGroup(
             pnTambahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnTambahLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(pnTambahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel9)
-                    .addComponent(jLabel10)
-                    .addComponent(jLabel11)
-                    .addComponent(tNama)
-                    .addComponent(tHarga, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
-                    .addComponent(tID))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnTambahLayout.createSequentialGroup()
                 .addGap(0, 498, Short.MAX_VALUE)
                 .addComponent(bSave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(bBatal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(34, 34, 34))
+            .addGroup(pnTambahLayout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(pnTambahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lStok)
+                    .addComponent(jLabel13)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel11)
+                    .addComponent(tNama)
+                    .addComponent(tHarga, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+                    .addComponent(tID)
+                    .addComponent(cJenis, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tStok))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnTambahLayout.setVerticalGroup(
             pnTambahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnTambahLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addComponent(jLabel4)
-                .addGap(107, 107, 107)
+                .addGap(77, 77, 77)
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(tID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -395,7 +409,15 @@ public class PriceList extends javax.swing.JPanel {
                 .addComponent(jLabel11)
                 .addGap(10, 10, 10)
                 .addComponent(tHarga, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 189, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel13)
+                .addGap(7, 7, 7)
+                .addComponent(cJenis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(lStok)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tStok, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 94, Short.MAX_VALUE)
                 .addGroup(pnTambahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(bSave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(bBatal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -445,7 +467,7 @@ public class PriceList extends javax.swing.JPanel {
 
     private void bBatalMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bBatalMousePressed
         pnMain.removeAll();
-        pnMain.add(new Menu());
+        pnMain.add(new Home(getUserID()));
         pnMain.repaint();
         pnMain.revalidate();
     }//GEN-LAST:event_bBatalMousePressed
@@ -465,19 +487,36 @@ public class PriceList extends javax.swing.JPanel {
             data.setVisible(true);
             tNama.setText(null);
             tHarga.setText(null);
+            cJenis.setSelectedItem(null);
+            tStok.setText(null);
         } else if(tNama.getText().equals("")) {
             boolean closable = true;
             PeringatanKosong data = new PeringatanKosong(null, closable);
             data.setVisible(true);
             tNama.setText(null);
             tHarga.setText(null);
+            cJenis.setSelectedItem(null);
+            tStok.setText(null);
         } else if(tHarga.getText().equals("")){
             boolean closable = true;
-            PeringatanLebih data = new PeringatanLebih(null, closable);
+            PeringatanKosong data = new PeringatanKosong(null, closable);
             data.setVisible(true);
             tNama.setText(null);
             tHarga.setText(null);
+            cJenis.setSelectedItem(null);
+            tStok.setText(null);
+        } else if(cJenis.getSelectedItem().equals(null)){
+            boolean closable = true;
+            PeringatanKosong data = new PeringatanKosong(null, closable);
+            data.setVisible(true);
+            tNama.setText(null);
+            tHarga.setText(null);
+            cJenis.setSelectedItem(null);
+            tStok.setText(null);
         }
+        
+        
+        
         
         if (lsave.getText().equals("SIMPAN")) {
             insertData();
@@ -487,10 +526,9 @@ public class PriceList extends javax.swing.JPanel {
             if (lTambah.getText().equals("UBAH")) {
             lTambah.setText("TAMBAH");
 
-            btnDelete.setVisible(false);
-
-        }
-        }
+            }
+       }
+     
     }//GEN-LAST:event_bSaveMousePressed
 
     private void btnDeleteMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDeleteMouseEntered
@@ -528,16 +566,32 @@ public class PriceList extends javax.swing.JPanel {
         pnMain.repaint();;
         pnMain.revalidate();
         
+        
          if (lTambah.getText().equals("UBAH")) {
             dataTabel();
             lsave.setText("PERBARUI");
-        }
+                    }
+            
+            if(cJenis.getSelectedItem().equals("BARANG")){
+                tStok.setVisible(true);
+                lStok.setVisible(true);
+            }
+            
     }//GEN-LAST:event_btnAddMousePressed
+
+    private void cJenisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cJenisActionPerformed
+        if(cJenis.getSelectedItem().equals("BARANG")){
+                tStok.setVisible(true);
+                lStok.setVisible(true);
+            }else if(cJenis.getSelectedItem().equals("JASA")){
+                tStok.setVisible(false);
+                lStok.setVisible(false);
+            }
+    }//GEN-LAST:event_cJenisActionPerformed
 
     private void vTabelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_vTabelMousePressed
         if (lTambah.getText().equals("TAMBAH")) {
             lTambah.setText("UBAH");
-
             btnDelete.setVisible(true);
 
         }
@@ -548,14 +602,17 @@ public class PriceList extends javax.swing.JPanel {
     private Palette.Panel bSave;
     private Palette.Panel btnAdd;
     private Palette.Panel btnDelete;
+    private javax.swing.JComboBox<String> cJenis;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lStok;
     private javax.swing.JLabel lTambah;
     private javax.swing.JLabel lbatal;
     private javax.swing.JLabel lsave;
@@ -565,7 +622,8 @@ public class PriceList extends javax.swing.JPanel {
     private javax.swing.JTextField tHarga;
     private javax.swing.JTextField tID;
     private javax.swing.JTextField tNama;
-    private Palette.JTable_Custom vTabel;
+    private javax.swing.JTextField tStok;
+    private javax.swing.JTable vTabel;
     // End of variables declaration//GEN-END:variables
 
  
@@ -589,8 +647,10 @@ public class PriceList extends javax.swing.JPanel {
                     String idBJ = rs.getString("id_barjas");
                     String namaBJ = rs.getString("nama_barjas");
                     int harga = rs.getInt("harga");
+                    String jenis = rs.getString("jenis_barjas");
+                    int stok = rs.getInt("stok");
                             
-                    Object[] rowdata = {idBJ, namaBJ, harga};
+                    Object[] rowdata = {idBJ, namaBJ, harga, jenis, stok};
                     model.addRow(rowdata);
                 }
             } 
@@ -625,13 +685,17 @@ public class PriceList extends javax.swing.JPanel {
         String idBarjas = tID.getText();
         String namaBarjas = tNama.getText()+" ";
         int harga = Integer.parseInt(tHarga.getText());
+        String jenis = cJenis.getSelectedItem().toString();
+        int stok = Integer.parseInt(tStok.getText());
         
         try {
-            String sql = "INSERT INTO barang_jasa (id_barjas, nama_barjas, harga) VALUES (?,?,?)";
+            String sql = "INSERT INTO barang_jasa (id_barjas, nama_barjas, harga, jenis_barjas, stok) VALUES (?,?,?,?,?)";
             try(PreparedStatement st = conn.prepareStatement(sql)) {
                 st.setString(1, idBarjas);
                 st.setString(2, namaBarjas);
                 st.setInt(3, harga);
+                st.setString(4, jenis);
+                st.setInt(5, stok);
                 
                 int rowInserted = st.executeUpdate();
                 if (rowInserted > 0){
@@ -699,16 +763,20 @@ public class PriceList extends javax.swing.JPanel {
         String id = tID.getText();
         String nama = tNama.getText();
         String harga = tHarga.getText();
+        String jenis = cJenis.getSelectedItem().toString();
+        String stok = tStok.getText();
 
         try {
 
-            String sql = "UPDATE barang_jasa SET nama_barjas=?, harga=? WHERE id_barjas =?";
+            String sql = "UPDATE barang_jasa SET nama_barjas=?, harga=?, jenis_barjas=?, stok=? WHERE id_barjas =?";
 
             PreparedStatement st = conn.prepareStatement(sql);
 
             st.setString(1, nama);
             st.setString(2, harga);
-            st.setString(3, id);
+            st.setString(3, jenis);
+            st.setString(4, stok);
+            st.setString(5, id);
 
             int rowUpdated = st.executeUpdate();
             if (rowUpdated > 0) {
@@ -724,7 +792,8 @@ public class PriceList extends javax.swing.JPanel {
                 pnMain.add(pnPricelist);
                 pnMain.repaint();
                 pnMain.revalidate();
-                lTambah.setText("SIMPAN");
+                lTambah.setText("TAMBAH");
+                btnDelete.setVisible(false);
             }
 
         } catch (SQLException e) {
@@ -739,6 +808,19 @@ public class PriceList extends javax.swing.JPanel {
         tID.setText(vTabel.getValueAt(row, 0).toString());
         tNama.setText(vTabel.getValueAt(row, 1).toString());
         tHarga.setText(vTabel.getValueAt(row, 2).toString());
+        String Jenis = vTabel.getValueAt(row, 3).toString()!= null ? vTabel.getValueAt(row, 3).toString() : null;
+        if (Jenis == null) {
+        cJenis.setSelectedItem(null);
+        }else if(Jenis == "BARANG"){
+        cJenis.setSelectedIndex(0);
+        
+        }else if(Jenis == "JENIS"){
+        cJenis.setSelectedIndex(1);
+        }
+        
+        String Stok = vTabel.getValueAt(row, 4).toString()!= null ? vTabel.getValueAt(row, 4).toString() : null;
+        tStok.setText(Stok != null ? Stok : "");
          
+        cJenis.setSelectedItem(Jenis);
          }
 }

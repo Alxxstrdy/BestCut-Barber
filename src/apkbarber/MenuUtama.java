@@ -17,7 +17,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import popup.AboutUs;
@@ -42,6 +41,8 @@ public class MenuUtama extends javax.swing.JFrame {
         this.userID = userID;
         showUser();
     }
+
+   
     public String getUserID() {
         return userID;
     }
@@ -67,7 +68,7 @@ public class MenuUtama extends javax.swing.JFrame {
     
     public void showHome(){
         pnKonten.removeAll();
-        pnKonten.add(new Menu());
+        pnKonten.add(new Home(getUserID()));
         pnKonten.repaint();
         pnKonten.revalidate();
     }
@@ -82,15 +83,13 @@ public class MenuUtama extends javax.swing.JFrame {
         pnBelakang = new javax.swing.JPanel();
         pnSamping = new Palette.Panel();
         home = new Palette.Panel();
-        jLabel2 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
         list = new Palette.Panel();
         jLabel4 = new javax.swing.JLabel();
         reservasi = new Palette.Panel();
         jLabel6 = new javax.swing.JLabel();
         kasir = new Palette.Panel();
         jLabel8 = new javax.swing.JLabel();
-        report = new Palette.Panel();
-        jLabel12 = new javax.swing.JLabel();
         transaksi = new Palette.Panel();
         jLabel10 = new javax.swing.JLabel();
         logout = new Palette.Panel();
@@ -99,6 +98,8 @@ public class MenuUtama extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
+        report = new Palette.Panel();
+        jLabel14 = new javax.swing.JLabel();
         pnKonten = new javax.swing.JPanel();
         pnAtas = new javax.swing.JPanel();
         lJam = new javax.swing.JLabel();
@@ -131,12 +132,10 @@ public class MenuUtama extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setBackground(new java.awt.Color(2, 131, 145));
-        jLabel2.setFont(new java.awt.Font("NEXT ART", 0, 19)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/Home.png"))); // NOI18N
-        jLabel2.setText("   HOME");
+        jLabel11.setFont(new java.awt.Font("NEXT ART", 0, 19)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/Home.png"))); // NOI18N
+        jLabel11.setText("   HOME");
 
         javax.swing.GroupLayout homeLayout = new javax.swing.GroupLayout(home);
         home.setLayout(homeLayout);
@@ -144,11 +143,11 @@ public class MenuUtama extends javax.swing.JFrame {
             homeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, homeLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         homeLayout.setVerticalGroup(
             homeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
+            .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
         );
 
         list.setBackground(new java.awt.Color(2, 131, 145));
@@ -265,44 +264,6 @@ public class MenuUtama extends javax.swing.JFrame {
             .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
         );
 
-        report.setBackground(new java.awt.Color(2, 131, 145));
-        report.setPreferredSize(new java.awt.Dimension(157, 37));
-        report.setRoundBottomLeft(20);
-        report.setRoundBottomRight(20);
-        report.setRoundTopLeft(20);
-        report.setRoundTopRight(20);
-        report.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                reportMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                reportMouseExited(evt);
-            }
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                reportMousePressed(evt);
-            }
-        });
-
-        jLabel12.setBackground(new java.awt.Color(2, 131, 145));
-        jLabel12.setFont(new java.awt.Font("NEXT ART", 0, 18)); // NOI18N
-        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/Report.png"))); // NOI18N
-        jLabel12.setText("   REPORT");
-
-        javax.swing.GroupLayout reportLayout = new javax.swing.GroupLayout(report);
-        report.setLayout(reportLayout);
-        reportLayout.setHorizontalGroup(
-            reportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, reportLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        reportLayout.setVerticalGroup(
-            reportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
-        );
-
         transaksi.setBackground(new java.awt.Color(2, 131, 145));
         transaksi.setPreferredSize(new java.awt.Dimension(157, 37));
         transaksi.setRoundBottomLeft(20);
@@ -399,6 +360,44 @@ public class MenuUtama extends javax.swing.JFrame {
             }
         });
 
+        report.setBackground(new java.awt.Color(2, 131, 145));
+        report.setPreferredSize(new java.awt.Dimension(157, 37));
+        report.setRoundBottomLeft(20);
+        report.setRoundBottomRight(20);
+        report.setRoundTopLeft(20);
+        report.setRoundTopRight(20);
+        report.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                reportMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                reportMouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                reportMousePressed(evt);
+            }
+        });
+
+        jLabel14.setBackground(new java.awt.Color(2, 131, 145));
+        jLabel14.setFont(new java.awt.Font("NEXT ART", 0, 18)); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/Report.png"))); // NOI18N
+        jLabel14.setText("   REPORT");
+
+        javax.swing.GroupLayout reportLayout = new javax.swing.GroupLayout(report);
+        report.setLayout(reportLayout);
+        reportLayout.setHorizontalGroup(
+            reportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, reportLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        reportLayout.setVerticalGroup(
+            reportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout pnSampingLayout = new javax.swing.GroupLayout(pnSamping);
         pnSamping.setLayout(pnSampingLayout);
         pnSampingLayout.setHorizontalGroup(
@@ -411,12 +410,12 @@ public class MenuUtama extends javax.swing.JFrame {
                     .addGroup(pnSampingLayout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(pnSampingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(report, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
                             .addComponent(transaksi, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
                             .addComponent(kasir, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
                             .addComponent(reservasi, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
                             .addComponent(list, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
-                            .addComponent(home, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(home, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(report, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)))
                     .addGroup(pnSampingLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -461,7 +460,7 @@ public class MenuUtama extends javax.swing.JFrame {
 
         pnKonten.setLayout(new java.awt.BorderLayout());
 
-        pnAtas.setBackground(new java.awt.Color(223, 230, 233));
+        pnAtas.setBackground(new java.awt.Color(255, 255, 255));
         pnAtas.setPreferredSize(new java.awt.Dimension(754, 62));
 
         lJam.setFont(new java.awt.Font("Lucida Fax", 0, 10)); // NOI18N
@@ -564,7 +563,7 @@ public class MenuUtama extends javax.swing.JFrame {
         home.setBackground(new Color (3,176,195));
         
         pnKonten.removeAll();
-        pnKonten.add(new Menu());
+        pnKonten.add(new Home(getUserID()));
         pnKonten.repaint();
         pnKonten.revalidate();
     }//GEN-LAST:event_homeMousePressed
@@ -573,7 +572,7 @@ public class MenuUtama extends javax.swing.JFrame {
         list.setBackground(new Color(3,176,195));
         
         pnKonten.removeAll();
-        pnKonten.add(new PriceList());
+        pnKonten.add(new PriceList(getUserID()));
         pnKonten.repaint();
         pnKonten.revalidate();
     }//GEN-LAST:event_listMousePressed
@@ -683,18 +682,6 @@ public class MenuUtama extends javax.swing.JFrame {
         transaksi.setBackground(new Color (2,154,170));
     }//GEN-LAST:event_transaksiMouseEntered
 
-    private void reportMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reportMousePressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_reportMousePressed
-
-    private void reportMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reportMouseExited
-        report.setBackground(new Color (2,131,145));
-    }//GEN-LAST:event_reportMouseExited
-
-    private void reportMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reportMouseEntered
-        report.setBackground(new Color (2,154,170));
-    }//GEN-LAST:event_reportMouseEntered
-
     private void logoutMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseEntered
         logout.setBackground(new Color (2,154,170));
     }//GEN-LAST:event_logoutMouseEntered
@@ -714,24 +701,32 @@ public class MenuUtama extends javax.swing.JFrame {
         data.setVisible(true);
     }//GEN-LAST:event_jLabel9MousePressed
 
+    private void reportMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reportMouseEntered
+        report.setBackground(new Color (2,154,170));
+    }//GEN-LAST:event_reportMouseEntered
+
+    private void reportMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reportMouseExited
+        report.setBackground(new Color (2,131,145));
+    }//GEN-LAST:event_reportMouseExited
+
+    private void reportMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reportMousePressed
+        report.setBackground(new Color(3,176,195));
+
+        pnKonten.removeAll();
+        pnKonten.add(new Report());
+        pnKonten.repaint();
+        pnKonten.revalidate();
+    }//GEN-LAST:event_reportMousePressed
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-         FlatLightLaf.setup();
-         
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        //</editor-fold>
+        
+        
 
-        /* Create and display the form */
+        
+
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 String userID = "ID";
@@ -744,9 +739,9 @@ public class MenuUtama extends javax.swing.JFrame {
     private Palette.Panel home;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;

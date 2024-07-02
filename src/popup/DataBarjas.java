@@ -1,4 +1,4 @@
-/*
+    /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
@@ -51,6 +51,7 @@ public class DataBarjas extends javax.swing.JDialog {
         tNama = new javax.swing.JTextField();
         tHarga = new javax.swing.JTextField();
         tQty = new javax.swing.JTextField();
+        tJenis = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new java.awt.CardLayout());
@@ -90,15 +91,23 @@ public class DataBarjas extends javax.swing.JDialog {
 
         tabData.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "ID", "NAMA", "HARGA"
+                "ID", "NAMA", "HARGA", "JENIS"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         tabData.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 tabDataMousePressed(evt);
@@ -127,6 +136,8 @@ public class DataBarjas extends javax.swing.JDialog {
 
         pnSembunyi.setBackground(new java.awt.Color(255, 255, 255));
 
+        tJenis.setText("jTextField1");
+
         javax.swing.GroupLayout pnSembunyiLayout = new javax.swing.GroupLayout(pnSembunyi);
         pnSembunyi.setLayout(pnSembunyiLayout);
         pnSembunyiLayout.setHorizontalGroup(
@@ -137,7 +148,8 @@ public class DataBarjas extends javax.swing.JDialog {
                     .addComponent(tId, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
                     .addComponent(tNama, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
                     .addComponent(tHarga, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
-                    .addComponent(tQty))
+                    .addComponent(tQty)
+                    .addComponent(tJenis))
                 .addContainerGap(354, Short.MAX_VALUE))
         );
         pnSembunyiLayout.setVerticalGroup(
@@ -151,7 +163,9 @@ public class DataBarjas extends javax.swing.JDialog {
                 .addComponent(tHarga, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(tQty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(222, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(tJenis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(188, Short.MAX_VALUE))
         );
 
         pnMain.add(pnSembunyi, "card3");
@@ -180,7 +194,6 @@ public class DataBarjas extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void tabDataMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabDataMousePressed
-        masukinData();
         insertData();
     }//GEN-LAST:event_tabDataMousePressed
 
@@ -237,6 +250,7 @@ public class DataBarjas extends javax.swing.JDialog {
     public javax.swing.JPanel pnUtama;
     public javax.swing.JTextField tHarga;
     public javax.swing.JTextField tId;
+    public javax.swing.JTextField tJenis;
     public javax.swing.JTextField tNama;
     public javax.swing.JTextField tQty;
     public Palette.JTable_Custom tabData;
@@ -262,8 +276,9 @@ public class DataBarjas extends javax.swing.JDialog {
                     String idBJ = rs.getString("id_barjas");
                     String namaBJ = rs.getString("nama_barjas");
                     int harga = rs.getInt("harga");
+                    String jenis = rs.getString("jenis_barjas");
                             
-                    Object[] rowdata = {idBJ, namaBJ, harga,};
+                    Object[] rowdata = {idBJ, namaBJ, harga,jenis};
                     model.addRow(rowdata);
                 }
             } 
@@ -271,37 +286,31 @@ public class DataBarjas extends javax.swing.JDialog {
             Logger.getLogger(DataBarjas.class.getName()).log(Level.SEVERE, null, e);
         }
     }
+   
+        
+        
+        
     
-    public void masukinData(){
+        private void insertData() {
         int i = tabData.getSelectedRow();
         String id = tabData.getValueAt(i, 0).toString();
         String nama = tabData.getValueAt(i, 1).toString();
         String Harga = tabData.getValueAt(i, 2).toString();
+        String Jenis = tabData.getValueAt(i, 3).toString();
         String Qty = JOptionPane.showInputDialog("Masukkan jumlah: ");
-        
-        tId.setText(id); 
-        tNama.setText(nama);
-        tHarga.setText(Harga);
-        tQty.setText(Qty);
-        
-        
-    }
-    
-        private void insertData() {
-        String idbarang = tId.getText();
-        String nama = tNama.getText();
-        int harga = Integer.parseInt(tHarga.getText());
-        int qty = Integer.parseInt(tQty.getText());
+        int harga = Integer.parseInt(Harga);
+        int qty = Integer.parseInt(Qty);
         int subtotal = harga*qty;
         
         try {
-            String sql = "INSERT INTO trans_sementara (id_barang, nama_brg, qty, harga, subtotal) VALUES (?,?,?,?,?)";
+            String sql = "INSERT INTO trans_sementara (id_barang, nama_brg, qty, harga, subtotal, jenis) VALUES (?,?,?,?,?,?)";
             try(PreparedStatement st = conn.prepareStatement(sql)) {
-                st.setString(1, idbarang);
+                st.setString(1, id);
                 st.setString(2, nama);
                 st.setInt(3, qty);
                 st.setInt(4, harga);
                 st.setInt(5, subtotal);
+                st.setString(6, Jenis);
                 
                 int rowInserted = st.executeUpdate();
                 if (rowInserted > 0){
